@@ -38,8 +38,16 @@ Full documentation on the API is further below.
  2. We want people who like writing unit tests.  So design your code to be testable, and write the best unit tests you can.  If you do TDD - perfect!
  3. Submit clean code and try to adhere to S.O.L.I.D. principles - this is a test.
  4. The more efficient your code is (don't accidentally Denial-of-Service attack us, please), the better.
- 5. The faster you finish, the better.  
- 6. Contact us for how to deliver a copy of your code or repository.
+ 5. The faster you finish, the better.
+
+### Submission Guidelines
+
+ 1. Zip all your files into a single archive file.
+ 2. Include all source code including unit test projects.
+ 3. Include all binaries including dependent libraries.
+ 4. You may also submit your source repository, if you have used one to develop your solution.
+ 5. Include a "Readme" file (e.g. Text, Word, Markdown) with instructions on how to run your application.
+ 6. Contact us for how to deliver the archive file.
 
 ### Sample
 
