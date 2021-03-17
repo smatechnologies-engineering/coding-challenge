@@ -1,10 +1,9 @@
-## Coding Challenge - Build an elevator:
+# Build an Elevator Coding Challenge!
 
-**Goal:** This challenge is to demonstrate your coding and problem solving skills by writing a meaningful application that is simple yet allows you to showcase your abilities.
+## The Challenge 
+Create an application that simulates the operation of a simple elevator.
 
-**Summary:** Create an application that simulates the operation of a simple elevator.
-
-**Requirements:**
+## Requirements
  - The elevator must travel in one direction at a time until it needs to go no further (**e.g.** keep going until the elevator has reached the top/bottom of the building, or no stop is requested on any floor ahead).
  - Elevator floor request buttons can be pressed **asynchronously** from inside or outside the elevator while it is running.
  - Elevator will stop at the closest floor first, in the direction of motion, then the next closest and so on.
@@ -21,4 +20,4 @@
 **Bonus Enhancement:**
  - Enhance the application as follows: If the elevator has reached its weight limit, it should stop only at floors that were selected from inside the elevator (to let passengers out), until it is no longer at the max weight limit.
 
-**Note:** For simplicity, the asynchronous request buttons can be entered by the application user via the console, by entering **"5U"** (request from 5th floor wanting to go Up) or **"8D"** (request from 8th floor wanting to go Down) or **"2"** (request from inside elevator wanting to stop at 2nd floor).
+**Note:** For simplicity, the asynchronous request buttons can be entered by the application user via the console, by entering **"5U"** (request from 5th floor wanting to go Up) or **"8D"** (request from 8th floor wanting to go Down) or **"2"** (request from inside elevator wanting to stop at 2nd floor).  When the user enters **"Q"** on the console, the application must end after visiting all floors entered before **"Q"**.
