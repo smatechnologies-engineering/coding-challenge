@@ -21,6 +21,6 @@ We like all individuals interesting in joining our team to provide actual soluti
 
 ### The Challenges
 
-1. **[Self-Driving Car](self-driving-car/README.md)** - In this challenge you will interact with a hosted REST API to issue commands on a "car" that is navigating around a road course.  Our API will track your car's state, so query the API to get data about your car  and information about the course.  Complete the course as fast as you can and make sure you obey the speed limits!
+1. **[Self-Driving Car](self-driving-car)** - In this challenge you will interact with a hosted REST API to issue commands on a "car" that is navigating around a road course.  Our API will track your car's state, so query the API to get data about your car  and information about the course.  Complete the course as fast as you can and make sure you obey the speed limits!
 
-2. **[Build an Elevator](elevator/README.md)** - In this challenge you will code an elevator that asynchronously accepts inputs in the form of button presses that call the elevator to a floor in a given direction (or to exit the elevator at a floor).  Make your elevator function like it would in the real world.
+2. **[Build an Elevator](elevator)** - In this challenge you will code an elevator that asynchronously accepts inputs in the form of button presses that call the elevator to a floor in a given direction (or to exit the elevator at a floor).  Make your elevator function like it would in the real world.

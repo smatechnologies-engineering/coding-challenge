@@ -19,7 +19,7 @@ There are 3 pre-made courses and they are progessively more complex.  When regis
 
 Full documentation on the API is further below.
 
-### General Notes
+## General Notes
 
  1. All measurements are in metric.
  2. The car ignition must be turned on (submit the 'IgnitionOn' car action) to get any car or road information.
@@ -32,7 +32,7 @@ Full documentation on the API is further below.
  9. If the current speed limit is 0 and there is no future speed limit, you are at the end of the course.  Submit the 'IgnitionOff' command.  This will erase settings for the car.
  10. All interactions with the REST API are logged.
 
-### Sample
+## Sample
 
 This repository contains a sample to get you started.  It contains the entity definitions and a basic REST client for interacting with the REST API.  
 
@@ -47,7 +47,7 @@ A typical implementation of these libraries might look like:
 
 Feel free to use as much or as little of it as possible.  Remember that even if you use our sample, we want testing!
 
-### API Reference
+## API Reference
 
 **api/tokens**
 
@@ -78,8 +78,8 @@ Request: *Empty*
 Response:
 
     {
-        �currentSpeedLimit�: { �min�: 15, �max�: 25 },
-        �speedLimitAhead�: { �min�: 30, �max�: 40, �remainingDistanceToEnforcement�: 50.534 }
+        "currentSpeedLimit": { "min": 15, "max": 25 },
+        "speedLimitAhead": { "min": 30, "max": 40, "remainingDistanceToEnforcement": 50.534 }
     }
 
 **api/car**
@@ -91,11 +91,11 @@ Request: *Empty*
 Response:
 
     {
-        �ignition�: �On�,
-        �engine�: { �state�: �Running� },
-        �currentVelocity�: 15.265,
-        �totalDistanceTraveled�: 281.328,
-        �totalTimeTraveled�: 36.461
+        "ignition": "On",
+        "engine": { "state": "Running" },
+        "currentVelocity": 15.265,
+        "totalDistanceTraveled": 281.328,
+        "totalTimeTraveled": 36.461
     }
 
 **api/carActions**
@@ -105,19 +105,19 @@ Method: **POST**
 Request: 
 
     {
-        �action�: �IgnitionOn�
+        "action": "IgnitionOn"
     }
 
 or
 
     {
-        �action�: �Accelerate�,
-        �force�: 3
+        "action": "Accelerate",
+        "force": 3
     }
 
 Response:
 
     {
-        �action�: �Accelerate�,
-        �force�: 3
+        "action": "Accelerate",
+        "force": 3
     }
