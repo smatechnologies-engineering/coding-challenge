@@ -1,7 +1,7 @@
 # Welcome to SMA Technologies Coding Challenges!
 
 ### Overview
-We like all individuals interesting in joining our team to provide actual solutions to coding problems to demonstrate their proficiency with a coding language.  General guidelines are below. Click the link to the specific challenges to get more detailed information.  Multiple challenges are provided, *you only need to pick a single one*.    When you are happy with a solution, go ahead and send it!  We would love to check out your work, but be prepared for us to ask you to explain decisions you took.
+We like all individuals interested in joining our team to provide actual solutions to coding problems that demonstrates their proficiency with a coding language.  General guidelines are below. Click the link to the specific challenges to get more detailed information.  Multiple challenges are provided, *you only need to pick a single one*.    When you are happy with a solution, go ahead and send it!  We would love to check out your work, but be prepared for us to ask you to explain decisions you took.
 
 ### Coding Guidelines
 
