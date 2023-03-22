@@ -30,12 +30,17 @@ class Elevator {
     this.passengerQueue = [];
   }
 
+  stopProcess() {
+    this.quit = true;
+  }
+
   move() {
+
     output('Current floor: ' + this.currentFloor);
    
-    if(this.quit) {
-      fs.appendFileSync('output.txt', 'we are done' + os.EOL);
-      return;
+    if(this.quit && !this.requestMap.size && !this.departMap.size && !this.passengerQueue.length) {
+      output('we are done');
+      process.exit();
     }
 
     // check if we are at top floor or bottom floor
@@ -185,10 +190,7 @@ class Elevator {
       this.requestMap.set(currentFloor, []);
     }
     this.requestMap.get(currentFloor).push({direction, weight});
-  }
-
-
-  
+  }  
 
 }
 

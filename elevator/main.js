@@ -19,7 +19,17 @@ elevator.move();
 
 const question = () => {
 
-
+  if(elevator.quit) {
+    if(elevator.passengerQueue.length) {
+      rl.question('No more outside requests at this time. Please input which floor is your destination', (answer) => {
+        elevator.selectFloor(answer);
+      })
+      question()
+    } else {
+      rl.close();
+    }
+  }
+  
   rl.question('What floor are you on and which direction are you going, OR which floor do you want to request?', (answer) => {
     if(answer.at(-1).toLowerCase() === 'u') {
       createRequest(answer.slice(0,-1), 1);
@@ -27,18 +37,16 @@ const question = () => {
       createRequest(answer.slice(0,-1), -1);
     } else if(answer === 'quit') {
       console.log('quitting...');
+      elevator.stopProcess();
       rl.close();
       process.exit();
     } else {
       if(elevator.passengerQueue.length) {
         elevator.selectFloor(answer);
-
-      } else {
-        
       }
+    
     }
-    question();
-  })
+    question()});
 }
 
 
