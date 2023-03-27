@@ -39,7 +39,7 @@ const question = () => {
     } else if(answer === 'quit') {
       elevator.stopProcess();
     } else {
-      if(elevator.passengerQueue.length) {
+      if(elevator.passengerRequestQueue.length) {
         elevator.selectFloor(Number(answer));
       }
     
@@ -47,9 +47,9 @@ const question = () => {
     question()});
 }
 
-
+// defaulting to weight of 25
 const createRequest = (floor, direction) => {
-  const req = new Request(Number(floor), direction, 0);
+  const req = new Request(Number(floor), direction, 25);
   elevator.request(req);
 }
 
