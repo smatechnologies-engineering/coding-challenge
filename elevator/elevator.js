@@ -1,7 +1,3 @@
-// need to have the elevator constantly moving from 0 -> this.floors
-// check if the next floor has any requests before we are moving 
-// this will ensure that we are never checking during and if we are between 4 and 5 and a request comes in we won't stop and pick up at 5
-
 // to write to new files for output 
 const fs = require('fs');
 
@@ -20,191 +16,221 @@ class Elevator {
     this.currentFloor = 0;
     this.currentDirection = 1;
     this.passengerCount = 0;
-    // this.currentDestination = 0;
+    this.currentDestination = -1;
     this.departMap = new Map(); 
-    this.requestMap = new Map();
 
+    this.requestObj = {};
     this.travelInterval = 1500;
     this.stopInterval = 500;
     this.quit = false;
     this.passengerQueue = [];
+
+    this.on = [];
+    this.off = [];
   }
 
-  stopProcess() {
-    this.quit = true;
-  }
+ 
+  /* ****** problems with move function
+    elevator takes 3s to move from floor to floor
 
+    we need to check who is getting on / off -> then after we do -> we need to either tell the elevator to stop at next floor or continue to the next
+    when we get to the next floor -> if we are stopped -> people get on or off -> we then decide next direction / destination
+    if we get to next floor and don't stop -> check next floor -> wait 3s to get there -> repeat again 
+
+    the problem with the check destination thing is that we are checking destination before people have gotten on the elevator and the array in reqobj has been deleted
+    so it checks the destination and just moves in the opposite direction even though there isn't really any need to stop ? 
+
+    probably can circumvent this by not checking the current req floor array
+
+  */
+
+
+
+  // still need to log here;
   move() {
+    this.move = this.move.bind(this);
 
-    output('Current floor: ' + this.currentFloor);
-   
-    if(this.quit && !this.requestMap.size && !this.departMap.size && !this.passengerQueue.length) {
-      output('we are done');
-      process.exit();
+    output('Current Floor: ' + this.currentFloor);
+    const changedDirection = this.decideDirection();
+
+    if(this.currentDestination === -1) {
+      setTimeout(this.move, this.stopInterval);
+      return;
     }
 
-    // check if we are at top floor or bottom floor
-    if(this.currentDirection === 1 && this.currentFloor === this.floors - 1) {
-      this.currentDirection = -1;
-    } else if(this.currentDirection === -1 && this.currentFloor === 0) {
-      this.currentDirection = 1;
-    }
-
-    // increment floor based on direction - change state to moving
     this.currentFloor += this.currentDirection;
-    this.state = 'moving';
-    this.checkStop();
+
+    const gettingOn = this.checkOn();
+    output(gettingOn);
+    const gettingOff = this.checkOff();
+
+    if(gettingOn.length || gettingOff.length) {
+      this.state = 'stopped';
+      this.stop(gettingOn, gettingOff);
+      return;
+    }
+
+    
+    setTimeout(this.move, this.travelInterval);
+  }
+  
+  decideDirection() {
+
+    // we must change direction here because we are at the top or bottom floor
+    if(this.currentFloor === 0) {
+      this.currentDirection = 1; 
+    } else if(this.currentFloor === this.floors) {
+      this.currentDirection = -1;
+    } else if(this.currentDestination === this.currentFloor) {
+
+      // if there are no requests going in the same direction as we were just traveling at target floor
+      if(!this.requestObj[this.currentFloor][this.currentDirection].length) {
+        this.currentDirection = this.currentDirection === 1 ? -1 : 1;
+      }
+    }
   }
 
+  // decides destination when we have reached current destination
+  // we also may need to keep track if there have been any requests made in the wrong direction? 
+  decideDestination() {
+    const keys = Object.keys(this.requestObj);
+    keys.push(...Array.from(this.departMap.keys()));
+    keys.sort((a,b) => a-b);
 
-  checkStop() {
-    // run this.check and will return 2 arrays
-    const gettingOn = this.checkOn();
-    const gettingOff = this.checkOff();
-    // console.log(gettingOn, gettingOff);
-    // if either array has a length we know we need to stop at the next floor
-    // make function here to board and depart elevator
-    if(gettingOn.length || gettingOff.length) {
-      // stop the elevator
-      this.state = 'stopped'
-      this.stop(gettingOn, gettingOff);
-    } else {
-      // call move again from next floor
-      this.move = this.move.bind(this);
-      setTimeout(this.move, this.travelInterval);
+    // if there are no requests to serve => do nothing;
+    if(!keys.length) {
+      this.currentDestination = -1; 
+      return;
+    }
+
+    if(this.currentDirection === 1) {
+      this.currentDestination = keys.at(-1);
+    } else if(this.currentDestination === -1) {
+      this.currentDestination = keys[0];
     }
 
   }
 
-
-  // we stop for 1 second
-  // we must board and deboard all passengers 
-  // if we are stopped at a floor we should be able to check if any other requests to board at this floor have come in
-  
-  // this.requestMap.get(currentFloor).push({destination, direction, weight});
   stop(gettingOn, gettingOff) {
 
-    // first we should remove everyone from the current departMap
+
     if(gettingOff.length) {
       output(JSON.stringify(gettingOff) + 'all got off ' + this.currentFloor);
       output('passenger off count : ' + this.passengerCount);
     }
-    
-    // next we must add all the current requests
-
-    // ** can make a new array to hold the passengers who haven't put their destination request in yet ** //
 
     if(gettingOn.length) {
-      const currentFloorRequests = this.requestMap.get(this.currentFloor.toString());
-      for(let i = currentFloorRequests.length - 1; i >= 0; i--) {
-        const {direction, weight} = currentFloorRequests[i];
-        if(direction === this.currentDirection) {
-      
-          this.passengerBoard(weight, currentFloorRequests, i);
-        }
-
-        
-      }
-      if(currentFloorRequests.length === 0) this.requestMap.delete(this.currentFloor.toString());
-
+      this.passengerQueue.push(...gettingOn);
+      output(JSON.stringify(gettingOff) + ' all got on ' + this.currentFloor)
     }
 
     this.move = this.move.bind(this);
     setTimeout(this.move, this.stopInterval);
-
-
-
   }
-
-  // this can be improved if we change how we store the data in the g et on map -> all up requests in one array / all down in another
-  passengerBoard(weight, requestArray, index) {
-   
-    // add to the passenger queue for passengers who haven't yet chosen a destination
-    this.passengerQueue.push(weight);
-    
-    // delete from the requestmap
-    requestArray.splice(index, 1);
-
-  }
-
-
-  // this could be improved conceptually if I used a queue but I got lazy and didn't want to implement one 
-  selectFloor(floor) {
-    const weight = this.passengerQueue.shift();
-    if(this.departMap.get(floor.toString()) === undefined) {
-      this.departMap.set(floor.toString(), []);
-    }
-
-    this.departMap.get(floor.toString()).push(weight);
-    // output('departed on floor ' + floor)
-
-  }
-
-
-  // we should keep track of how many passengers are getting off so we can more easily know the weight when 
-  // I decide to add that feature
   
-  // should return an array of which passengers are getting on and where tf they're going
   checkOff() {
-    // this will check if someone needs to get off
     const gettingOff = [];
-    if(this.departMap.get(this.currentFloor.toString()) !== undefined) {
+    // const nextFloor = this.currentFloor + this.currentDirection;
+    if(this.departMap.get(this.currentFloor) !== undefined) {
 
-      gettingOff.push(...this.departMap.get(this.currentFloor.toString()));
+      gettingOff.push(...this.departMap.get(this.currentFloor));
       this.passengerCount += gettingOff.length;
-      this.departMap.delete(this.currentFloor.toString());
+      this.departMap.delete(nextFloor);
     }
     return gettingOff;
   }
 
   checkOn() {
     const gettingOn = [];
-    // check if someone has made a request to get on 
-      // this leads into does someone need to go in the same direction we are moving 
+    // const nextFloor = this.currentFloor + this.currentDirection;
 
-    if(this.requestMap.get(this.currentFloor.toString()) !== undefined) {
-      // returns the array of current requests at the floor
-      const currentFloorRequestArray = this.requestMap.get(this.currentFloor.toString());
-
-      // if the person in the array is going the same direction as the elevator then they will get added to getting on array
-      for(let i = 0; i < currentFloorRequestArray.length; i++) {
-        const {direction} = currentFloorRequestArray[i];
-        if(direction === this.currentDirection) {
-          gettingOn.push(currentFloorRequestArray[i])
-        }
+    if(this.requestObj[this.currentFloor] !== undefined) {
+      gettingOn.push(...this.requestObj[this.currentFloor][this.currentDirection])
+      this.requestObj[this.currentFloor][this.currentDirection] = [];
+      
+      if(!this.requestObj[this.currentFloor][this.currentDirection * -1].length) {
+        delete this.requestObj[this.currentFloor];
       }
+
     }
-    // output('getting on array : ', JSON.stringify(gettingOn))
+    
     return gettingOn;
+  }
+
+  selectFloor(floor) {
+    const weight = this.passengerQueue.shift();
+    if(this.departMap.get(floor) === undefined) {
+      this.departMap.set(floor, []);
+    }
+
+    this.departMap.get(floor).push(weight);
 
   }
 
 
-  // we need to make sure the map is from Key > value ---> currentFloor -> [{destination, direction}, {destination, direction}]
   request(request) {
     const {currentFloor, direction, weight} = request;
-
-    // ****need to add bounds here****
-
-    if(this.requestMap.get(currentFloor) === undefined) {
-      this.requestMap.set(currentFloor, []);
+    if(this.requestObj[currentFloor] === undefined) {
+      this.requestObj[currentFloor] = {
+        1: [],
+        '-1': []
+      }
     }
-    this.requestMap.get(currentFloor).push({direction, weight});
-  }  
+
+    this.requestObj[currentFloor][direction].push(weight);
+
+    if(this.currentDestination === -1) {
+      this.currentDestination = currentFloor;
+      if(currentFloor < this.currentDestination) {
+        this.currentDirection = 1;
+      } else if(currentFloor > this.currentDestination) {
+        this.currentDirection = -1;
+      }
+      return;
+    }
+    
+    // change current destination if new floor request is further up or down in correct direction as elevator is currently traveling
+    if(this.currentDirection === 1) {
+      if(currentFloor > this.currentDestination) this.currentDestination = currentFloor;
+    } else if(this.currentDirection === -1) {
+      if(currentFloor < this.currentDestination) this.currentDestination = currentFloor;
+    }
+
+  }
+
+  stopProcess() {
+    this.quit = true;
+  }
 
 }
-
-
-
-
-// ** shouldn't be able to have the same destination and current floor
-// ** also shouldn't be able to hit up on the elevator but also go down in the request
-
-
-
-
 
 module.exports = {Elevator};
 
 
 
+const obj = {};
+
+// console.log(obj.keys())
+console.log(Object.keys(obj));
+// console.log(obj.keys.length)
+
+
+ // move() {
+
+  //   output('Current floor: ' + this.currentFloor);
+   
+  //   if(this.quit && !this.requestMap.size && !this.departMap.size && !this.passengerQueue.length) {
+  //     output('we are done');
+  //     process.exit();
+  //   }
+
+  //   if(this.currentDirection === 1 && this.currentFloor === this.floors - 1) {
+  //     this.currentDirection = -1;
+  //   } else if(this.currentDirection === -1 && this.currentFloor === 0) {
+  //     this.currentDirection = 1;
+  //   }
+
+  //   this.currentFloor += this.currentDirection;
+  //   this.state = 'moving';
+  //   this.checkStop();
+  // }
