@@ -29,9 +29,15 @@ class Elevator {
 
 
   move() {
+
+    
+
     this.move = this.move.bind(this);
     output('Current Floor: ' + this.currentFloor);
-    
+
+    if(this.quit && this.endProcess()) {
+      process.exit();
+    }
     if(this.currentFloor === 0) this.currentDirection = 1;
     else if(this.currentFloor === this.floors) this.currentDirection = -1;
 
@@ -49,6 +55,8 @@ class Elevator {
       this.stop();
       return;
     }
+
+    
 
     this.currentFloor += this.currentDirection;
     this.state = 'moving';
@@ -104,6 +112,7 @@ class Elevator {
     if(this.departMap.get(this.currentFloor) !== undefined) {
       this.off.push(...this.departMap.get(this.currentFloor));
       this.passengerCount -= this.off.length;
+      console.log(this.departMap.get(this.currentFloor))
       this.departMap.delete(this.currentFloor);
     }
   }
@@ -170,6 +179,12 @@ class Elevator {
 
   stopProcess() {
     this.quit = true;
+  }
+
+  endProcess() {
+    console.log(this.departMap.size);
+    console.log(!Object.keys(this.requestObj).length && !this.passengerQueue.length && !this.departMap.size)
+    return (!Object.keys(this.requestObj).length && !this.passengerQueue.length && !this.departMap.size)
   }
 
 }
