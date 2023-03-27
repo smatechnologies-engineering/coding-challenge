@@ -1,4 +1,5 @@
 // to write to new files for output 
+const { ifError } = require('assert');
 const fs = require('fs');
 
 // to add EOL character to file output
@@ -18,7 +19,6 @@ class Elevator {
     this.passengerCount = 0;
     this.currentDestination = -1;
     this.departMap = new Map(); 
-
     this.requestObj = {};
     this.travelInterval = 1500;
     this.stopInterval = 500;
@@ -29,47 +29,44 @@ class Elevator {
     this.off = [];
   }
 
- 
-  /* ****** problems with move function
-    elevator takes 3s to move from floor to floor
 
-    we need to check who is getting on / off -> then after we do -> we need to either tell the elevator to stop at next floor or continue to the next
-    when we get to the next floor -> if we are stopped -> people get on or off -> we then decide next direction / destination
-    if we get to next floor and don't stop -> check next floor -> wait 3s to get there -> repeat again 
-
-    the problem with the check destination thing is that we are checking destination before people have gotten on the elevator and the array in reqobj has been deleted
-    so it checks the destination and just moves in the opposite direction even though there isn't really any need to stop ? 
-
-    probably can circumvent this by not checking the current req floor array
-
-  */
-
-
-
-  // still need to log here;
   move() {
     this.move = this.move.bind(this);
-
     output('Current Floor: ' + this.currentFloor);
-    const changedDirection = this.decideDirection();
+    output('Current Dest: ' + this.currentDestination);
+    output('Current Dir: ' + this.currentDirection);
+    this.decideDirection();
+    this.decideDestination();
+
+    if(this.state === 'stopped' && this.currentDestination === -1 && this.requestObj[this.currentFloor]) {
+      if(this.requestObj[this.currentFloor][1].length) { // default to up if there is a decision between the two
+        this.currentDirection = 1;
+      } else if(this.requestObj[this.currentFloor][-1].length) {
+        this.currentDirection = -1;
+      }
+      this.checkOn();
+      this.stop();
+      return;
+    } else if(this.on.length || this.off.length) {
+      output('we got on');
+      this.stop();
+      return;
+    }
+
+    
 
     if(this.currentDestination === -1) {
       setTimeout(this.move, this.stopInterval);
       return;
     }
 
+    
+    
     this.currentFloor += this.currentDirection;
-
-    const gettingOn = this.checkOn();
-    output(gettingOn);
-    const gettingOff = this.checkOff();
-
-    if(gettingOn.length || gettingOff.length) {
-      this.state = 'stopped';
-      this.stop(gettingOn, gettingOff);
-      return;
-    }
-
+    this.state = 'moving';
+    this.checkOn();
+    this.checkOff();
+    this.decideDestination();
     
     setTimeout(this.move, this.travelInterval);
   }
@@ -84,7 +81,7 @@ class Elevator {
     } else if(this.currentDestination === this.currentFloor) {
 
       // if there are no requests going in the same direction as we were just traveling at target floor
-      if(!this.requestObj[this.currentFloor][this.currentDirection].length) {
+      if(this.requestObj[this.currentFloor] && !this.requestObj[this.currentFloor][this.currentDirection].length) {
         this.currentDirection = this.currentDirection === 1 ? -1 : 1;
       }
     }
@@ -104,58 +101,65 @@ class Elevator {
     }
 
     if(this.currentDirection === 1) {
-      this.currentDestination = keys.at(-1);
+      this.currentDestination = Number(keys.at(-1));
     } else if(this.currentDestination === -1) {
-      this.currentDestination = keys[0];
+      this.currentDestination = Number(keys[0]);
+    }
+
+    if(this.currentFloor < this.currentDestination) {
+      this.currentDirection = 1;
+    } else if(this.currentFloor > this.currentDestination) {
+      this.currentDirection = -1;
     }
 
   }
 
-  stop(gettingOn, gettingOff) {
+  stop() {
+  
+    this.state = 'stopped';
 
-
-    if(gettingOff.length) {
-      output(JSON.stringify(gettingOff) + 'all got off ' + this.currentFloor);
+    if(this.off.length) {
+      output(JSON.stringify(this.off) + 'all got off ' + this.currentFloor);
       output('passenger off count : ' + this.passengerCount);
     }
 
-    if(gettingOn.length) {
-      this.passengerQueue.push(...gettingOn);
-      output(JSON.stringify(gettingOff) + ' all got on ' + this.currentFloor)
+    if(this.on.length) {
+      this.passengerQueue.push(...this.on);
+      output(JSON.stringify(this.on) + ' all got on ' + this.currentFloor)
     }
 
+    this.off = [];
+    this.on = [];
     this.move = this.move.bind(this);
     setTimeout(this.move, this.stopInterval);
   }
   
   checkOff() {
-    const gettingOff = [];
-    // const nextFloor = this.currentFloor + this.currentDirection;
-    if(this.departMap.get(this.currentFloor) !== undefined) {
 
-      gettingOff.push(...this.departMap.get(this.currentFloor));
-      this.passengerCount += gettingOff.length;
-      this.departMap.delete(nextFloor);
+    if(this.departMap.get(this.currentFloor) !== undefined) {
+      this.off.push(...this.departMap.get(this.currentFloor));
+      this.passengerCount -= this.off.length;
+      this.departMap.delete(this.currentFloor);
     }
-    return gettingOff;
   }
 
   checkOn() {
-    const gettingOn = [];
-    // const nextFloor = this.currentFloor + this.currentDirection;
-
+    
     if(this.requestObj[this.currentFloor] !== undefined) {
-      gettingOn.push(...this.requestObj[this.currentFloor][this.currentDirection])
+      if(this.currentFloor === this.currentDestination) {
+        this.decideDirection();
+      }
+
+      this.on.push(...this.requestObj[this.currentFloor][this.currentDirection])
+      this.passengerCount += this.requestObj[this.currentFloor][this.currentDirection].length;
       this.requestObj[this.currentFloor][this.currentDirection] = [];
-      
-      if(!this.requestObj[this.currentFloor][this.currentDirection * -1].length) {
+      if(!this.requestObj[this.currentFloor][this.currentDirection * -1].length && !this.requestObj[this.currentFloor][this.currentDirection].length) {
         delete this.requestObj[this.currentFloor];
       }
 
     }
-    
-    return gettingOn;
   }
+
 
   selectFloor(floor) {
     const weight = this.passengerQueue.shift();
@@ -169,6 +173,7 @@ class Elevator {
 
 
   request(request) {
+
     const {currentFloor, direction, weight} = request;
     if(this.requestObj[currentFloor] === undefined) {
       this.requestObj[currentFloor] = {
@@ -179,6 +184,8 @@ class Elevator {
 
     this.requestObj[currentFloor][direction].push(weight);
 
+    // if elevator has no current destination -> set request currentlFloor to currentDestination
+    // set currentDirection in right direction as well 
     if(this.currentDestination === -1) {
       this.currentDestination = currentFloor;
       if(currentFloor < this.currentDestination) {
@@ -208,29 +215,3 @@ module.exports = {Elevator};
 
 
 
-const obj = {};
-
-// console.log(obj.keys())
-console.log(Object.keys(obj));
-// console.log(obj.keys.length)
-
-
- // move() {
-
-  //   output('Current floor: ' + this.currentFloor);
-   
-  //   if(this.quit && !this.requestMap.size && !this.departMap.size && !this.passengerQueue.length) {
-  //     output('we are done');
-  //     process.exit();
-  //   }
-
-  //   if(this.currentDirection === 1 && this.currentFloor === this.floors - 1) {
-  //     this.currentDirection = -1;
-  //   } else if(this.currentDirection === -1 && this.currentFloor === 0) {
-  //     this.currentDirection = 1;
-  //   }
-
-  //   this.currentFloor += this.currentDirection;
-  //   this.state = 'moving';
-  //   this.checkStop();
-  // }

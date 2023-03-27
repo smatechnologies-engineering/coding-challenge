@@ -14,7 +14,7 @@ const rl = readline.createInterface({
 });
 
 
-const elevator = new Elevator(5);
+const elevator = new Elevator(15);
 elevator.move();
 
 const question = () => {
