@@ -1,11 +1,10 @@
 // to write to new files for output 
-const { ifError } = require('assert');
 const fs = require('fs');
 
 // to add EOL character to file output
 const os = require('os');
 
-
+// to make output easier
 const output = txt => {
   fs.appendFileSync('output.txt', txt + os.EOL);
 }
@@ -24,7 +23,6 @@ class Elevator {
     this.stopInterval = 500;
     this.quit = false;
     this.passengerQueue = [];
-
     this.on = [];
     this.off = [];
   }
@@ -33,66 +31,37 @@ class Elevator {
   move() {
     this.move = this.move.bind(this);
     output('Current Floor: ' + this.currentFloor);
-    output('Current Dest: ' + this.currentDestination);
-    output('Current Dir: ' + this.currentDirection);
-    this.decideDirection();
-    this.decideDestination();
+    
+    if(this.currentFloor === 0) this.currentDirection = 1;
+    else if(this.currentFloor === this.floors) this.currentDirection = -1;
 
     if(this.state === 'stopped' && this.currentDestination === -1 && this.requestObj[this.currentFloor]) {
-      if(this.requestObj[this.currentFloor][1].length) { // default to up if there is a decision between the two
-        this.currentDirection = 1;
-      } else if(this.requestObj[this.currentFloor][-1].length) {
-        this.currentDirection = -1;
-      }
       this.checkOn();
-      this.stop();
-      return;
-    } else if(this.on.length || this.off.length) {
-      output('we got on');
-      this.stop();
-      return;
-    }
-
-    
-
-    if(this.currentDestination === -1) {
+    } else if(this.currentDestination === -1) {
       setTimeout(this.move, this.stopInterval);
       return;
+    } else if(this.currentDestination === this.currentFloor) {
+        this.setDestinationDecision();
+    }
+      
+    if(this.on.length || this.off.length) {
+      output('we got on / off')
+      this.stop();
+      return;
     }
 
-    
-    
     this.currentFloor += this.currentDirection;
     this.state = 'moving';
     this.checkOn();
     this.checkOff();
-    this.decideDestination();
     
     setTimeout(this.move, this.travelInterval);
   }
-  
-  decideDirection() {
 
-    // we must change direction here because we are at the top or bottom floor
-    if(this.currentFloor === 0) {
-      this.currentDirection = 1; 
-    } else if(this.currentFloor === this.floors) {
-      this.currentDirection = -1;
-    } else if(this.currentDestination === this.currentFloor) {
-
-      // if there are no requests going in the same direction as we were just traveling at target floor
-      if(this.requestObj[this.currentFloor] && !this.requestObj[this.currentFloor][this.currentDirection].length) {
-        this.currentDirection = this.currentDirection === 1 ? -1 : 1;
-      }
-    }
-  }
-
-  // decides destination when we have reached current destination
-  // we also may need to keep track if there have been any requests made in the wrong direction? 
-  decideDestination() {
+  // if elevator is empty and there are still unserved requests -> elevator decides where to go here
+  setDestinationDecision() {
     const keys = Object.keys(this.requestObj);
     keys.push(...Array.from(this.departMap.keys()));
-    keys.sort((a,b) => a-b);
 
     // if there are no requests to serve => do nothing;
     if(!keys.length) {
@@ -101,16 +70,13 @@ class Elevator {
     }
 
     if(this.currentDirection === 1) {
-      this.currentDestination = Number(keys.at(-1));
-    } else if(this.currentDestination === -1) {
-      this.currentDestination = Number(keys[0]);
+      this.currentDestination = Number(Math.max(...keys));
+    } else if(this.currentDirection === -1) {
+      this.currentDestination = Number(Math.min(...keys));
     }
 
-    if(this.currentFloor < this.currentDestination) {
-      this.currentDirection = 1;
-    } else if(this.currentFloor > this.currentDestination) {
-      this.currentDirection = -1;
-    }
+
+    this.currentDirection = this.currentFloor < this.currentDestination ? 1 : -1;
 
   }
 
@@ -120,7 +86,6 @@ class Elevator {
 
     if(this.off.length) {
       output(JSON.stringify(this.off) + 'all got off ' + this.currentFloor);
-      output('passenger off count : ' + this.passengerCount);
     }
 
     if(this.on.length) {
@@ -146,15 +111,16 @@ class Elevator {
   checkOn() {
     
     if(this.requestObj[this.currentFloor] !== undefined) {
-      if(this.currentFloor === this.currentDestination) {
-        this.decideDirection();
+      if(this.currentFloor === this.currentDestination && !this.requestObj[this.currentFloor][this.currentDirection].length) {
+        this.currentDirection = this.currentDirection === 1 ? -1 : 1;
       }
 
       this.on.push(...this.requestObj[this.currentFloor][this.currentDirection])
       this.passengerCount += this.requestObj[this.currentFloor][this.currentDirection].length;
       this.requestObj[this.currentFloor][this.currentDirection] = [];
-      if(!this.requestObj[this.currentFloor][this.currentDirection * -1].length && !this.requestObj[this.currentFloor][this.currentDirection].length) {
-        delete this.requestObj[this.currentFloor];
+
+      if(!this.requestObj[this.currentFloor][1].length && !this.requestObj[this.currentFloor][-1].length) {
+          delete this.requestObj[this.currentFloor];
       }
 
     }
@@ -168,7 +134,21 @@ class Elevator {
     }
 
     this.departMap.get(floor).push(weight);
+    this.setDestinationExternal(floor);
+    
+  }
 
+
+  // if there is an external request where our currentDestination should change 
+  setDestinationExternal(floor) {
+    if(this.currentDestination === -1) {
+      this.currentDestination = floor;
+      this.currentDirection = floor > this.currentFloor ? 1 : -1;
+    } else if(this.currentDirection === 1) {
+      if(floor > this.currentDestination) this.currentDestination = floor;
+    } else if(this.currentDirection === -1) {
+      if(floor < this.currentDestination) this.currentDestination = floor;
+    }
   }
 
 
@@ -183,25 +163,8 @@ class Elevator {
     }
 
     this.requestObj[currentFloor][direction].push(weight);
-
-    // if elevator has no current destination -> set request currentlFloor to currentDestination
-    // set currentDirection in right direction as well 
-    if(this.currentDestination === -1) {
-      this.currentDestination = currentFloor;
-      if(currentFloor < this.currentDestination) {
-        this.currentDirection = 1;
-      } else if(currentFloor > this.currentDestination) {
-        this.currentDirection = -1;
-      }
-      return;
-    }
     
-    // change current destination if new floor request is further up or down in correct direction as elevator is currently traveling
-    if(this.currentDirection === 1) {
-      if(currentFloor > this.currentDestination) this.currentDestination = currentFloor;
-    } else if(this.currentDirection === -1) {
-      if(currentFloor < this.currentDestination) this.currentDestination = currentFloor;
-    }
+    this.setDestinationExternal(currentFloor);
 
   }
 
@@ -212,6 +175,4 @@ class Elevator {
 }
 
 module.exports = {Elevator};
-
-
 
