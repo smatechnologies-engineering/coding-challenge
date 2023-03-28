@@ -258,7 +258,10 @@ class Elevator {
 
   // will end when all requests have been served and all passengers are off the elevator
   endProcess() {
-    return (!Object.keys(this.externalRequestObject).length && !this.passengerRequestQueue.length && !this.departureRequestMap.size)
+    return (!Object.keys(this.externalRequestObject).length && 
+    !this.passengerRequestQueue.length && 
+    !this.departureRequestMap.size && !this.boardingPassengers.length
+    && this.departingPassengers.length)
   }
 
 }
