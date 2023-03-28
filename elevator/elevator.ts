@@ -6,21 +6,20 @@ import * as os from 'os';
 
 import {ElevatorRequest, ExternalRequestObject, DirectionObject} from './types.js';
 
-import {output} from './functions.js'
+import Output from './output.js';
+
+
+
+
+const sum = (arr: number[]) => {
+  let sum = 0;
+  sum = arr.reduce((a, b) => a + b);
+  return sum;
+};
 
 
 // internal request : buttons pressed from inside the elevator by passengers
 // external requets : buttons pressed on floor N going U or D 
-
-const sum = (arr: number[]) => {
-  let sum = 0;
-  sum = arr.reduce((a,b) => a + b);
-  return sum;
-}
-
-
-
-
 
 class Elevator { 
 
@@ -29,16 +28,17 @@ class Elevator {
   currentFloor: number;
   currentDirection: 1 | -1;
   currentDestination: number;
-  departureRequestMap: Map<number, number[]>;
-  externalRequestObject: ExternalRequestObject;
   travelInterval: number;
   stopInterval: number;
   quit: boolean;
+  currentWeight: number;
+  weightLimit: number;
+  departureRequestMap: Map<number, number[]>;
+  externalRequestObject: ExternalRequestObject;
   passengerRequestQueue: number[];
   boardingPassengers: number[];
   departingPassengers: number[];
-  currentWeight: number;
-  weightLimit: number;
+  output: Output;
 
   constructor(floors: number) {
     this.floors = floors;
@@ -46,23 +46,25 @@ class Elevator {
     this.currentFloor = 0;
     this.currentDirection = 1;
     this.currentDestination = -1;
+    this.travelInterval = 3000;
+    this.stopInterval = 1000;
+    this.quit = false;
+    this.currentWeight = 0;
+    this.weightLimit = 50;
     this.departureRequestMap = new Map(); 
     this.externalRequestObject = {};
-    this.travelInterval = 1500;
-    this.stopInterval = 500;
-    this.quit = false;
     this.passengerRequestQueue = [];
     this.boardingPassengers = [];
     this.departingPassengers = [];
-    this.currentWeight = 0;
-    this.weightLimit = 50;
+    this.output = new Output('output.txt');
   }
+
 
 
   move() {
 
     this.move = this.move.bind(this);
-    output('Current Floor: ' + this.currentFloor);
+    
 
     if(this.quit && this.endProcess()) {
       process.exit();
@@ -74,7 +76,8 @@ class Elevator {
 
     
     // if elevator is not moving and someone requests same floor to get on
-    if(this.state === 'stopped' && this.currentDestination === -1 && this.externalRequestObject[this.currentFloor]) {
+    if(this.state === 'stopped' && (this.currentDestination === -1 || this.currentDestination === this.currentFloor)
+    && this.externalRequestObject[this.currentFloor]) {
       this.checkOn();
     // if elevator is not moving and has no requests - wait 1s and check for new reqeusts  
     } else if(this.currentDestination === -1) {
@@ -87,29 +90,36 @@ class Elevator {
      
     // check if anyone is getting on or off at current floor
     if(this.boardingPassengers.length || this.departingPassengers.length) {
-      output('we got on / off')
+      this.output.output('Stopped on floor: ' + this.currentFloor);
       this.stop();
       return;
     }
+    
 
     // if at or above weight limit : need to reset destination to only internal requests
     if(this.currentWeight >= this.weightLimit) {
       this.setDestinationDecision(); 
     }
-    
+
+    // if there is no current destination : wait interval to see if there is a new request
     if(this.currentDestination === -1) {
       setTimeout(this.move, this.stopInterval);
       return;
     }
    
+    this.output.output('Passing floor: ' + this.currentFloor);
+    
+    // increment / decrement current floor and change state to moving : check if any board / deboard next floor
     this.currentFloor += this.currentDirection;
     this.state = 'moving';
+
     this.checkOff();
     this.checkOn();
     
     
     setTimeout(this.move, this.travelInterval);
   }
+
 
   // if elevator is empty and there are still unserved requests -> elevator decides where to go here
   // picks furthest away floor in opposite direction - either external floor request or internal elevator request
@@ -121,7 +131,7 @@ class Elevator {
       if(Object.keys(this.externalRequestObject).length) keys.push(Number(...Object.keys(this.externalRequestObject))); 
     }
     
-    // if there are no requests to serve => do nothing;
+    // if there are no requests to serve
     if(!keys.length) {
       this.currentDestination = -1; 
       return;
@@ -144,14 +154,13 @@ class Elevator {
     this.state = 'stopped';
 
     if(this.departingPassengers.length) {
-      output(JSON.stringify(this.departingPassengers) + 'all got off ' + this.currentFloor);
+      this.output.output(this.departingPassengers.length + ' passenger(s) got off ');
     }
 
     if(this.boardingPassengers.length) {
       this.passengerRequestQueue.push(...this.boardingPassengers);
-      output(JSON.stringify(this.boardingPassengers) + ' all got on ' + this.currentFloor)
+      this.output.output((this.boardingPassengers.length + ' passenger(s) got on '));
     }
-    output('current weight' + this.currentWeight);
 
     this.departingPassengers = [];
     this.boardingPassengers = [];
@@ -178,8 +187,9 @@ class Elevator {
     
     if(this.externalRequestObject[this.currentFloor] !== undefined) {
       // if elevator has reached destination floor it needs to change direction if the request is in the opposite direction
-      if(this.currentFloor === this.currentDestination && !this.externalRequestObject[this.currentFloor][this.currentDirection].length) {
-        this.currentDirection = this.currentDirection === 1 ? -1 : 1;
+      if(this.currentFloor === this.currentDestination && 
+        !this.externalRequestObject[this.currentFloor][this.currentDirection].length) {
+          this.currentDirection = this.currentDirection === 1 ? -1 : 1;
       }
 
       const boardingArr = this.externalRequestObject[this.currentFloor][this.currentDirection];
@@ -189,9 +199,6 @@ class Elevator {
           this.boardingPassengers.push(currentBoarder);
           boardingArr.pop();
           this.currentWeight += currentBoarder;
-
-        } else {
-          console.log('over weight limit ' + this.currentWeight)
         }
       }
       if(!boardingArr.length) this.externalRequestObject[this.currentFloor][this.currentDirection] = [];
@@ -207,6 +214,7 @@ class Elevator {
 
   // internal floor request sets their destination in departureRequestMap
   selectFloor(floor: number) {
+    this.output.output('Floor ' + floor + ' requested internally');
     const weight = this.passengerRequestQueue.shift()!;
     if(this.departureRequestMap.get(floor) === undefined) {
       this.departureRequestMap.set(floor, []);
@@ -231,23 +239,22 @@ class Elevator {
     }
   }
 
-
   // handles external request
   request(request: ElevatorRequest) {
-
+    
     const {currentFloor, direction, weight} = request;
     if(this.externalRequestObject[currentFloor] === undefined) {
       this.externalRequestObject[currentFloor] = {
         '1': [],
         '-1': []
-      } as DirectionObject;
+      };
     }
+    this.output.output('Floor ' + currentFloor + ' requested externally');
 
     this.externalRequestObject[currentFloor][direction].push(weight);
     
     // if the destination needs to be changed based on current direction it will be set here if weight allows
     if(this.currentWeight < this.weightLimit) this.setDestinationExternal(currentFloor);
-    
 
   }
 
@@ -261,7 +268,7 @@ class Elevator {
     return (!Object.keys(this.externalRequestObject).length && 
     !this.passengerRequestQueue.length && 
     !this.departureRequestMap.size && !this.boardingPassengers.length
-    && this.departingPassengers.length)
+    && !this.departingPassengers.length)
   }
 
 }
