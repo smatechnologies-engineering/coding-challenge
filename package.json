@@ -1,9 +1,10 @@
 {
   "dependencies": {
+    "@datastructures-js/priority-queue": "^6.2.0",
     "fs": "^0.0.1-security",
     "os": "^0.1.2"
   },
-  "scripts" : {
+  "scripts": {
     "test": "jest --config jest.config.cjs --verbose --coverage --detectOpenHandles"
   },
   "devDependencies": {

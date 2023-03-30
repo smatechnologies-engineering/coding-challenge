@@ -29,6 +29,11 @@ export type DirectionObject = {
 
 export type ElevatorRequest = {
   currentFloor: number;
-  direction: number;
+  direction: direction;
   weight: number;
+  destination: undefined | number;
+
 }
+
+
+export type direction = 1 | -1;

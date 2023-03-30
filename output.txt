@@ -1,0 +1,9 @@
+21:10:43 - Floor 1 requested externally
+21:10:43 - Floor 2 requested externally
+21:10:43 - Passing floor: 0
+21:10:43 - Floor 3 requested externally
+21:10:46 - Stopped on floor: 1
+21:10:46 - 1 passenger(s) got on 
+21:10:47 - Passing floor: 1
+21:10:50 - Stopped on floor: 2
+21:10:50 - 1 passenger(s) got on 

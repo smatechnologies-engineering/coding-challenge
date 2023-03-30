@@ -30,7 +30,7 @@ const question = () => {
         else if (answer.at(-1).toLowerCase() === 'd') {
             createRequest(answer.slice(0, -1), -1);
         }
-        else if (answer === 'quit') {
+        else if (answer.toLowerCase() === 'q') {
             elevator.stopProcess();
         }
         else {

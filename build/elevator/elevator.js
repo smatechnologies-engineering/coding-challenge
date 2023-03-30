@@ -1,4 +1,7 @@
 import Output from './output.js';
+// I think that in order to limit inefficient destination checks we should use a priority queue only for departureMap.
+// this way we can keep track of the max or min value depending on direction and peek it in constant time instead of creating
+// a whole new array and using O(n) to find the min or max.
 const sum = (arr) => {
     let sum = 0;
     sum = arr.reduce((a, b) => a + b);
@@ -18,7 +21,7 @@ class Elevator {
         this.quit = false;
         this.currentWeight = 0;
         this.weightLimit = 50;
-        this.departureRequestMap = new Map();
+        this.departureRequestMap = new Map(); // maybe it makes sense to have this be a priority queue? 
         this.externalRequestObject = {};
         this.passengerRequestQueue = [];
         this.boardingPassengers = [];
@@ -27,6 +30,21 @@ class Elevator {
     }
     move() {
         this.move = this.move.bind(this);
+        this.newFloorChecks();
+        // if at or above weight limit : need to reset destination to only internal requests
+        // * can we limit this in any way? 
+        if (this.currentWeight >= this.weightLimit) {
+            this.setDestinationDecision();
+        }
+        this.output.output('Passing floor: ' + this.currentFloor);
+        // increment / decrement current floor and change state to moving : check if any board / deboard next floor
+        this.currentFloor += this.currentDirection;
+        this.state = 'moving';
+        this.checkOff();
+        this.checkOn();
+        setTimeout(this.move, this.travelInterval);
+    }
+    newFloorChecks() {
         if (this.quit && this.endProcess()) {
             process.exit();
         }
@@ -39,47 +57,25 @@ class Elevator {
         if (this.state === 'stopped' && (this.currentDestination === -1 || this.currentDestination === this.currentFloor)
             && this.externalRequestObject[this.currentFloor]) {
             this.checkOn();
-            // if elevator is not moving and has no requests - wait 1s and check for new reqeusts  
-        }
-        else if (this.currentDestination === -1) {
-            setTimeout(this.move, this.stopInterval);
-            return;
-            // if we have reached the destination - check for new destination based on unserved requests
-        }
-        else if (this.currentDestination === this.currentFloor) {
-            this.setDestinationDecision();
         }
         // check if anyone is getting on or off at current floor
         if (this.boardingPassengers.length || this.departingPassengers.length) {
             this.output.output('Stopped on floor: ' + this.currentFloor);
-            this.stop();
+            this.stopAndBoard();
             return;
         }
-        // if at or above weight limit : need to reset destination to only internal requests
-        if (this.currentWeight >= this.weightLimit) {
-            this.setDestinationDecision();
-        }
-        // if there is no current destination : wait interval to see if there is a new request
-        if (this.currentDestination === -1) {
+        else if (this.currentDestination === -1) {
             setTimeout(this.move, this.stopInterval);
             return;
         }
-        this.output.output('Passing floor: ' + this.currentFloor);
-        // increment / decrement current floor and change state to moving : check if any board / deboard next floor
-        this.currentFloor += this.currentDirection;
-        this.state = 'moving';
-        this.checkOff();
-        this.checkOn();
-        setTimeout(this.move, this.travelInterval);
     }
-    // if elevator is empty and there are still unserved requests -> elevator decides where to go here
-    // picks furthest away floor in opposite direction - either external floor request or internal elevator request
+    // *** use a priority queue here *** 
+    // pick destination if elevator reached current destination or elevator reached weight limit
     setDestinationDecision() {
-        const keys = this.departureRequestMap.size ? [Number(...Array.from(this.departureRequestMap.keys()))] : [];
+        const keys = Array.from(this.departureRequestMap.keys());
         //if we are at or above the weight limit don't consider external requests
         if (this.currentWeight < this.weightLimit) {
-            if (Object.keys(this.externalRequestObject).length)
-                keys.push(Number(...Object.keys(this.externalRequestObject)));
+            keys.push(Number(...Object.keys(this.externalRequestObject)));
         }
         // if there are no requests to serve
         if (!keys.length) {
@@ -95,7 +91,8 @@ class Elevator {
         this.currentDirection = this.currentFloor < this.currentDestination ? 1 : -1;
     }
     // stops elevator and boards / deboards passengers depending on their request
-    stop() {
+    // ** maybe should add functionality to see if people made the request just too late for initial check
+    stopAndBoard() {
         this.state = 'stopped';
         if (this.departingPassengers.length) {
             this.output.output(this.departingPassengers.length + ' passenger(s) got off ');
@@ -106,7 +103,6 @@ class Elevator {
         }
         this.departingPassengers = [];
         this.boardingPassengers = [];
-        this.move = this.move.bind(this);
         setTimeout(this.move, this.stopInterval);
     }
     // check who is getting off the elevator while it is in transit from floor n to floor n +/- 1
@@ -156,6 +152,8 @@ class Elevator {
     }
     // if there is an external request where our currentDestination should change 
     setDestinationExternal(floor) {
+        if (this.currentWeight >= this.weightLimit)
+            return;
         if (this.currentDestination === -1) {
             this.currentDestination = floor;
             this.currentDirection = floor > this.currentFloor ? 1 : -1;

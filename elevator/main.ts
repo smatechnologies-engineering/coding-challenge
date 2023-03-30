@@ -2,6 +2,7 @@ import Elevator from './elevator.js';
 import ElevatorRequest from './request.js';
 import * as fs from 'fs';
 import * as readline from 'readline';
+import {direction} from './types.js'
 
 
 // Create an interface for reading from the command line
@@ -46,7 +47,7 @@ const question = () => {
 }
 
 // defaulting to weight of 25
-const createRequest = (floor: string, direction: number) => {
+const createRequest = (floor: string, direction: direction) => {
   const req = new ElevatorRequest(Number(floor), direction, 25);
   elevator.request(req);
 }

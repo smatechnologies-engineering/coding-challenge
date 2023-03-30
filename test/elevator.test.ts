@@ -1,5 +1,5 @@
 // Import the Elevator class from your implementation file
-import Elevator from '../elevator/elevator'
+import Elevator from '../elevator/elevator.js'
 // import Elevator from '../build/elevator/elevator.js';
 
 jest.useFakeTimers();
