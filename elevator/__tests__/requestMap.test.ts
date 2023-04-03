@@ -1,11 +1,11 @@
-import RequestMap from '../build/elevator/requestMap.js'
-
+// import RequestMap from '../elevator/requestMap.js'
+import RequestMap from '../requestMap.js'
 
 describe('RequestMap', () => {
-  let requestMap = new RequestMap<number>();
+  let requestMap: RequestMap<number>;
   beforeEach(() => {
     // Create a new Elevator instance before each test
-    let requestMap = new RequestMap<number>();
+    requestMap = new RequestMap<number>();
   });
 
   it('both max and min should be -1 if there requestMap.map size = 0', () => {

@@ -1,0 +1,30 @@
+22:59:46 - Floor 1 requested externally
+22:59:46 - Floor 2 requested externally
+22:59:46 - Floor 3 requested externally
+22:59:50 - Stopped on floor: 1
+22:59:50 - 1 passenger(s) got on 
+22:59:54 - Stopped on floor: 2
+22:59:54 - 1 passenger(s) got on 
+23:0:6 - Floor 5 requested internally
+23:0:7 - Floor 6 requested externally
+23:0:10 - Passing floor: 3
+23:0:13 - Passing floor: 4
+23:0:16 - Stopped on floor: 5
+23:0:16 - 1 passenger(s) got off 
+23:0:20 - Stopped on floor: 6
+23:0:20 - 1 passenger(s) got on 
+23:0:26 - Floor 2 requested internally
+23:0:27 - Floor 1 requested internally
+23:0:29 - Passing floor: 5
+23:0:32 - Passing floor: 4
+23:0:35 - Passing floor: 3
+23:0:38 - Stopped on floor: 2
+23:0:38 - 1 passenger(s) got off 
+23:0:42 - Stopped on floor: 1
+23:0:42 - 1 passenger(s) got off 
+23:0:46 - Passing floor: 2
+23:0:49 - Stopped on floor: 3
+23:0:49 - 1 passenger(s) got on 
+23:0:55 - Floor 4 requested internally
+23:0:59 - Stopped on floor: 4
+23:0:59 - 1 passenger(s) got off 

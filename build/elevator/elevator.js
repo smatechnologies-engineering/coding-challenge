@@ -1,5 +1,10 @@
-import RequestMap from './requestMap.js';
-import Output from './output.js';
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const requestMap_js_1 = __importDefault(require("./requestMap.js"));
+const output_js_1 = __importDefault(require("./output.js"));
 const sum = (arr) => {
     let sum = 0;
     sum = arr.reduce((a, b) => a + b);
@@ -19,12 +24,12 @@ class Elevator {
         this.quit = false;
         this.currentWeight = 0;
         this.weightLimit = 50;
-        this.departureRequestMap = new RequestMap(); // maybe it makes sense to have this be a priority queue? 
-        this.externalRequestMap = new RequestMap();
+        this.departureRequestMap = new requestMap_js_1.default(); // maybe it makes sense to have this be a priority queue? 
+        this.externalRequestMap = new requestMap_js_1.default();
         this.passengerRequestQueue = [];
         this.boardingPassengers = [];
         this.departingPassengers = [];
-        this.output = new Output('output.txt');
+        this.output = new output_js_1.default('output.txt');
     }
     move() {
         this.move = this.move.bind(this);
@@ -167,5 +172,4 @@ class Elevator {
             && !this.departingPassengers.length);
     }
 }
-export default Elevator;
-// testMatch: ['*/__tests__/**/*.ts?(x)', '**/?(*.)+(test).ts?(x)'],
+exports.default = Elevator;

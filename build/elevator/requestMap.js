@@ -1,5 +1,7 @@
+"use strict";
 // keep track of max / min 
 // be a normal object
+Object.defineProperty(exports, "__esModule", { value: true });
 class RequestMap {
     constructor() {
         this.map = new Map();
@@ -39,4 +41,4 @@ class RequestMap {
         this.max = Math.max(...Array.from(this.map.keys()));
     }
 }
-export default RequestMap;
+exports.default = RequestMap;

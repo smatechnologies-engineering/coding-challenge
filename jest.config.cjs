@@ -1,11 +1,13 @@
 module.exports = {
   preset: 'ts-jest',
   transform: {
-    '^.+\\.ts?$': 'ts-jest',
+    '^.+\\.(t|j)s?$': 'ts-jest',
     '^.+\\.(js|jsx)$': 'babel-jest'
   },
-  testMatch: ['*/__tests__/**/*.ts?(x)', '**/?(*.)+(test).ts?(x)'],
+  testMatch: ['**/*.test.js?(x)', '**/*.spec.ts?(x)'],
+
 
   testTimeout: 5000,
-  modulePaths: ['<rootDir>']
+  modulePaths: ['<rootDir>'],
+  testEnvironment: 'node'
 };

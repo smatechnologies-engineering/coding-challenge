@@ -232,4 +232,3 @@ class Elevator {
 export default Elevator;
 
 
-// testMatch: ['*/__tests__/**/*.ts?(x)', '**/?(*.)+(test).ts?(x)'],
