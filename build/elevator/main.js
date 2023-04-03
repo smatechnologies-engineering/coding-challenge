@@ -11,7 +11,7 @@ const elevator = new Elevator(15);
 elevator.move();
 const question = () => {
     if (elevator.quit) {
-        if (elevator.passengerRequestQueue.length || Object.keys(elevator.externalRequestObject)) {
+        if (elevator.passengerRequestQueue.length || Object.keys(elevator.externalRequestMap)) {
             rl.question('No more outside requests at this time. Please input which floor is your destination', (answer) => {
                 elevator.selectFloor(Number(answer));
                 question();

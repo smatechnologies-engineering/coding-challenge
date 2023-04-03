@@ -8,12 +8,6 @@ class ElevatorRequest {
         this.currentFloor = currentFloor;
         this.direction = direction;
         this.weight = weight;
-        this.destination = undefined;
-    }
-    setDestination(floor) {
-        if (this.destination === undefined) {
-            this.destination = floor;
-        }
     }
 }
 export default ElevatorRequest;

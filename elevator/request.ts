@@ -27,29 +27,16 @@ class ElevatorRequest  {
   currentFloor: number;
   direction: direction;
   weight: number;
-  destination: undefined | number;
+
   
 
   constructor(currentFloor: number, direction: direction, weight:number) {
     this.currentFloor = currentFloor;
     this.direction = direction;
     this.weight = weight;
-    this.destination = undefined;
+
   }
-
-  setDestination(floor: number) {
-    if(this.destination === undefined) {
-      this.destination = floor;
-    }
-  }
-
-
 }
-
-
-
-
-
 
 export default ElevatorRequest;
 
