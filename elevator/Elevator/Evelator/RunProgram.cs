@@ -28,7 +28,7 @@ namespace Elevator
             while (input.ToLowerInvariant() != "q")
             {
                 input = Console.ReadLine().Trim();
-                
+
                 ProcessInput(input, floors);
             }
             source.Cancel();
@@ -74,10 +74,10 @@ namespace Elevator
                         return result;
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     return TaskResult.Error("Directions unclear");
-                }                
+                }
             }
             else
             {
@@ -102,11 +102,11 @@ namespace Elevator
             return TaskResult.Success();
         }
 
-        private  bool IsFloorValid(string floor)
+        private bool IsFloorValid(string floor)
         {
             return int.TryParse(floor, out var f) && (f >= 0 && f < 11);
         }
-        private  bool ProcessDirection(string direction)
+        private bool ProcessDirection(string direction)
         {
             return direction.ToLowerInvariant().Equals("u") || direction.ToLowerInvariant().Equals("d");
         }

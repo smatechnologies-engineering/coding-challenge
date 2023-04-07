@@ -6,7 +6,7 @@ namespace Elevator
     {
         public static void Main(string[] args)
         {
-            MainAsync().Wait();            
+            MainAsync().Wait();
         }
 
         private static async Task MainAsync()

@@ -89,7 +89,7 @@ namespace Elevator.Domain
         {
             Logging.LogWithTime($"Stopping at Floor: {CurrentFloor}");
             var currentState = this.Direction;
-            this.Direction = Direction.Stopped; 
+            this.Direction = Direction.Stopped;
             await Task.Delay(1000);
             this.Direction = currentState;
         }
