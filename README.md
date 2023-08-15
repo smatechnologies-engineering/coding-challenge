@@ -1,7 +1,7 @@
-# Welcome to SMA Technologies Coding Challenges!
+# Welcome to SMA Technologies Coding Challenge!
 
 ### Overview
-We like all individuals interested in joining our team to provide actual solutions to coding problems that demonstrates their proficiency with a coding language.  General guidelines are below. Click the link to the specific challenges to get more detailed information.  Multiple challenges are provided, *you only need to pick a single one*.    When you are happy with a solution, go ahead and send it!  We would love to check out your work, but be prepared for us to ask you to explain decisions you took.
+We like all individuals interested in joining our team to provide actual solutions to coding problems that demonstrates their proficiency with a coding language.  General guidelines are below. Click the link to the specific challenge to get more detailed information.  When you are happy with a solution, go ahead and send it!  We would love to check out your work, but be prepared for us to ask you to explain decisions you took.
 
 ### Coding Guidelines
 
@@ -19,6 +19,6 @@ We like all individuals interested in joining our team to provide actual solutio
  5. Include a "Readme" file (e.g. Text, Word, Markdown) with instructions on how to run your application.
  6. Contact us for how to deliver the archive file.
 
-### The Challenges
+### The Challenge
 
 1. **[Build an Elevator](elevator)** - In this challenge you will code an elevator that asynchronously accepts inputs in the form of button presses that call the elevator to a floor in a given direction (or to exit the elevator at a floor).  Make your elevator function like it would in the real world.
