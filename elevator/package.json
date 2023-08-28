@@ -1,0 +1,73 @@
+{
+  "name": "elevator.application",
+  "version": "1.0.0",
+  "description": "",
+  "main": "elevator.js",
+  "scripts": {
+    "test": "jest --collect-coverage --no-cache",
+    "lint": "eslint src test",
+    "plato": "plato -d report -r src",
+    "start": "node src/elevator"
+  },
+  "author": "",
+  "license": "ISC",
+  "eslintConfig": {
+    "globals": {
+      "expect": true,
+      "Wordle": true
+    },
+    "env": {
+      "browser": true,
+      "node": true,
+      "es6": true,
+      "mocha": true
+    },
+    "extends": "eslint:recommended",
+    "parserOptions": {
+      "ecmaVersion": 9,
+      "sourceType": "module"
+    },
+    "rules": {
+      "eqeqeq": "error",
+      "strict": "error",
+      "no-var": "error",
+      "no-unused-vars": [
+        "off"
+      ],
+      "prefer-const": "error",
+      "no-console": "off",
+      "indent": [
+        "error",
+        2
+      ],
+      "quotes": [
+        "error",
+        "single",
+        "avoid-escape"
+      ],
+      "semi": [
+        "error",
+        "always"
+      ]
+    }
+  },
+  "jest": {
+    "coveragePathIgnorePatterns": [
+      "/src"
+    ]
+  },
+  "babel": {
+    "plugins": [
+      "@babel/plugin-transform-modules-commonjs"
+    ]
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.21.2",
+    "eslint": "^8.37.0",
+    "jest": "^29.5.0",
+    "plato": "^1.7.0"
+  },
+  "dependencies": {
+    "directory-import": "^2.3.1"
+  }
+}
