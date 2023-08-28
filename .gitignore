@@ -328,3 +328,15 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+elevator/coverage/clover.xml
+elevator/coverage/coverage-final.json
+elevator/coverage/lcov.info
+elevator/coverage/lcov-report/base.css
+elevator/coverage/lcov-report/block-navigation.js
+elevator/coverage/lcov-report/favicon.png
+elevator/coverage/lcov-report/index.html
+elevator/coverage/lcov-report/prettify.css
+elevator/coverage/lcov-report/prettify.js
+elevator/coverage/lcov-report/sort-arrow-sprite.png
+elevator/coverage/lcov-report/sorter.js
+elevator/package-lock.json

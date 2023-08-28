@@ -2,12 +2,12 @@
   "name": "elevator.application",
   "version": "1.0.0",
   "description": "",
-  "main": "elevator.js",
+  "main": "elevator.service.js",
   "scripts": {
     "test": "jest --collect-coverage --no-cache",
     "lint": "eslint src test",
     "plato": "plato -d report -r src",
-    "start": "node src/elevator"
+    "start": "node src/elevator.service"
   },
   "author": "",
   "license": "ISC",
