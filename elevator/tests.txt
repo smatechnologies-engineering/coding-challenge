@@ -1,1 +1,7 @@
-xcanary test
+x canary test
+x validateFloor request to 5th floor return position at 5
+x validateFloor request past max floor throw error
+x validateFloor request past min floor throw error
+-inside elevator travel request on existing floor throw error
+
+-outside elevator request 
