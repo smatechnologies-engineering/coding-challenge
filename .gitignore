@@ -340,3 +340,5 @@ elevator/coverage/lcov-report/prettify.js
 elevator/coverage/lcov-report/sort-arrow-sprite.png
 elevator/coverage/lcov-report/sorter.js
 elevator/package-lock.json
+elevator/.vscode/launch.json
+elevator/elevator.code-workspace

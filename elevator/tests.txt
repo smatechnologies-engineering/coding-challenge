@@ -2,6 +2,9 @@ x canary test
 x validateFloor request to 5th floor return position at 5
 x validateFloor request past max floor throw error
 x validateFloor request past min floor throw error
--inside elevator travel request on existing floor throw error
+- inside elevator travel request on existing floor throw error
+
+x elevatorTimer given 10ms await 10ms 
+x elevatorTimer given 100ms await 100ms
 
 -outside elevator request 
