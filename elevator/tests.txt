@@ -7,4 +7,5 @@ x validateFloor request past min floor throw error
 x elevatorTimer given 10ms await 10ms 
 x elevatorTimer given 100ms await 100ms
 
--outside elevator request 
+- elevator travel 3 floors up log correct output
+- elevator travel 1 floor up and 2 floor down log correct output
