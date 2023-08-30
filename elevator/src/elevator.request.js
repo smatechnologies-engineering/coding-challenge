@@ -1,5 +1,9 @@
-const maxFloor = 10;
-const minFloor = 1;
+import { logEvent, typeOfEvent } from './elevator.log.js';
+
+const MAX_FLOOR = 10;
+const MIN_FLOOR = 1;
+const MOVE_DELAY = 300;
+const STOP_DELAY = 100;
 const maxWeight = 1000;
 
 const elevatorSensor = {
@@ -11,23 +15,20 @@ const elevatorSensor = {
   weightLimit: false,
 }
 
-function validateFloor(floorNum) { //SLAP
-  if (floorNum > maxFloor || floorNum < minFloor || floorNum === elevatorSensor.currentFloor) {
+function validateFloor(floorNum) { 
+  if (floorNum > MAX_FLOOR || floorNum < MIN_FLOOR) {
     throw new Error('Invalid floor number');
   }
   return floorNum;
 }
 
-function elevatorTimer(time) {
+async function elevatorTimer(time) {
   return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve('resolving');
-    }, time);
+    setTimeout(resolve, time);
   });
 }
 
-async function elevatorTravel() {
-
+async function handleRequests() {
   while (elevatorSensor.requestedFloor.length > 0) {   
     if (elevatorSensor.currentFloor < elevatorSensor.nextFloor) {
       elevatorSensor.direction = 'U';
@@ -50,12 +51,12 @@ async function elevatorTravel() {
         elevatorSensor.currentFloor--;
       }
       
-      await elevatorTimer(300);
+      await elevatorTimer(MOVE_DELAY);
     }
     
     elevatorSensor.isMoving = false;
 
-    await elevatorTimer(100);
+    await elevatorTimer(STOP_DELAY);
 
     elevatorSensor.requestedFloor.splice(elevatorSensor.requestedFloor.indexOf(elevatorSensor.currentFloor), 1);
 
@@ -64,6 +65,9 @@ async function elevatorTravel() {
   
 }
 
+function resetElevatorPosition() {
+
+}
 function getNextPickup() {
   if (elevatorSensor.requestedFloor.length === 0) {
     return null;
@@ -80,11 +84,10 @@ function getNextPickup() {
     }
   });
 
-  // If no matching floors, consider all floors in pickupQueue
   const floorsToConsider = floorsInDirection.length > 0 ? floorsInDirection : elevatorSensor.requestedFloor;
 
-  // Prioritize floors based on distance
   const distances = floorsToConsider.map(floor => Math.abs(floor - elevatorSensor.currentFloor));
+
   const sortedFloors = floorsToConsider.slice().sort((a, b) => distances[floorsToConsider.indexOf(a)] - distances[floorsToConsider.indexOf(b)]);
 
   elevatorSensor.nextFloor = sortedFloors[0];
@@ -100,15 +103,13 @@ async function insideElevatorRequest(floorNum) {
   }
   elevatorSensor.requestedFloor.push(floorNum);
 
-  await (elevatorTravel());
+  await (handleRequests());
 
   return elevatorSensor;
 }
 
-//5U for example will be parsed as 5 and U in elevator.service.js first
-async function outsideElevatorRequest(floorNum, direction) {
+async function outsideElevatorRequest(floorNum) {
 
-  //Validate floor only after we check the next floor number
   validateFloor(floorNum);
 
   //Timestamp here
@@ -117,13 +118,20 @@ async function outsideElevatorRequest(floorNum, direction) {
     elevatorSensor.nextFloor = floorNum;
   }
 
-  elevatorSensor.requestedFloor.push(floorNum);
+  if (elevatorSensor.isMoving && Math.abs(floorNum - elevatorSensor.currentFloor) >= 1 || !elevatorSensor.isMoving) {
+    elevatorSensor.requestedFloor.push(floorNum);
+  }
+
+  else {
+    elevatorTimer(MOVE_DELAY);
+    elevatorSensor.requestedFloor.push(floorNum);
+  }
 }
 
 module.exports.validateFloor = validateFloor;
 module.exports.elevatorTimer = elevatorTimer;
 
 insideElevatorRequest(6);
-outsideElevatorRequest(3);
-insideElevatorRequest(7);
+outsideElevatorRequest(1);
+//insideElevatorRequest(7);
 outsideElevatorRequest(2);
