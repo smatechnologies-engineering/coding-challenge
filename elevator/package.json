@@ -7,7 +7,7 @@
     "test": "jest --collect-coverage --no-cache",
     "lint": "eslint src test",
     "plato": "plato -d report -r src",
-    "start": "node src/elevator.service"
+    "start": "node src/elevator.service.js"
   },
   "author": "",
   "license": "ISC",

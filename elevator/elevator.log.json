@@ -1,7 +1,27 @@
 [
   {
-    "timestamp": "2:35:17 AM",
-    "event": "inside request",
-    "floorNum": 5
+    "timestamp": "2023-09-02T04:57:40.619Z",
+    "event": "inside elevator request",
+    "floorNumber": 2
+  },
+  {
+    "timestamp": "2023-09-02T04:57:40.930Z",
+    "event": "move",
+    "floorNumber": 2
+  },
+  {
+    "timestamp": "2023-09-02T04:57:41.038Z",
+    "event": "stop",
+    "floorNumber": 2
+  },
+  {
+    "timestamp": "2023-09-02T04:57:41.755Z",
+    "event": "move",
+    "floorNumber": 1
+  },
+  {
+    "timestamp": "2023-09-02T04:57:41.864Z",
+    "event": "stop",
+    "floorNumber": 1
   }
 ]
