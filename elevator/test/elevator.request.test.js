@@ -1,3 +1,5 @@
+/* eslint-env jest */
+
 const elevatorLogging = require('../src/elevator.log.js');
 import { resetElevatorPosition, insideElevatorRequest, outsideElevatorRequest, validateFloor, elevatorTimer, allRequestsCompleted } from '../src/elevator.request.js';
 import { typeOfEvent, getLog, clearLog } from '../src/elevator.log.js';
@@ -48,11 +50,11 @@ test('elevator made a request inside return correct output', async () => {
   const log = getLog();
 
   expect(log).toEqual([
-      expect.objectContaining({ event: typeOfEvent.INSIDE, floorNumber: 3 }),
-      expect.objectContaining({ event: typeOfEvent.MOVE, floorNumber: 2 }),
-      expect.objectContaining({ event: typeOfEvent.MOVE, floorNumber: 3 }),
-      expect.objectContaining({ event: typeOfEvent.STOP, floorNumber: 3 })
-    ]);
+    expect.objectContaining({ event: typeOfEvent.INSIDE, floorNumber: 3 }),
+    expect.objectContaining({ event: typeOfEvent.MOVE, floorNumber: 2 }),
+    expect.objectContaining({ event: typeOfEvent.MOVE, floorNumber: 3 }),
+    expect.objectContaining({ event: typeOfEvent.STOP, floorNumber: 3 })
+  ]);
 });
 
 test('elevator made a request inside return correct output', async () => { 

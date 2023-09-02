@@ -1,5 +1,3 @@
-"use strict"; 
-
 const fs = require('fs');
 
 const elevatorLogs = [];
@@ -9,7 +7,7 @@ const typeOfEvent = {
   OUTSIDE: 'outside elevator request',
   MOVE: 'move',
   STOP: 'stop',
-}
+};
 
 function getLog() {
   return elevatorLogs;

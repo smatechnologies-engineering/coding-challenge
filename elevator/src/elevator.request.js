@@ -1,5 +1,3 @@
-"use strict"; 
-
 const elevatorLogging = require('./elevator.log.js');
 
 const typeOfEvent = elevatorLogging.typeOfEvent;
@@ -15,7 +13,7 @@ const elevatorSensor = {
   requestedFloor: [],
   direction: '',
   isMoving: false,
-}
+};
 
 async function allRequestsCompleted() {
   while (elevatorSensor.requestedFloor.length > 0) {
@@ -57,7 +55,7 @@ async function handleRequests() {
     
     elevatorSensor.isMoving = true;
 
-    while (elevatorSensor.nextFloor != elevatorSensor.currentFloor) {
+    while (elevatorSensor.nextFloor !== elevatorSensor.currentFloor) {
       elevatorSensor.nextFloor = getNextPickup();
 
       if (elevatorSensor.direction === 'U') {

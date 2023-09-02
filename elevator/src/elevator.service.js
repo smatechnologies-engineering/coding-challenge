@@ -1,4 +1,3 @@
-"use strict"; 
 const readline = require('readline');
 const elevatorRequest = require('./elevator.request.js');
 let completed = false;
@@ -11,7 +10,7 @@ function handleUserInput(floorNumber) {
 
     completed = true;
 
-    return
+    return;
   }
 
   if (!isNaN(floorNumber)) {
