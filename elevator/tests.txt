@@ -1,0 +1,17 @@
+x canary test
+
+x validateFloor request to 5th floor return position at 5
+x validateFloor request past max floor throw error
+x validateFloor request past min floor throw error
+
+x elevatorTimer given 10ms await 10ms 
+x elevatorTimer given 100ms await 100ms
+
+x allRequestsCompleted called for writeLog
+
+x elevator made a request inside return correct output
+x elevator made a request outside return correct output
+x elevator made a request inside then outside return correct output 
+
+x logEvent successfully record an event
+
