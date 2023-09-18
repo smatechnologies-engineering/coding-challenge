@@ -19,3 +19,35 @@ Bonus Enhancement:
 
 Enhance the application as follows: If the elevator has reached its weight limit, it should stop only at floors that were selected from inside the elevator (to let passengers out), until it is no longer at the max weight limit.
 Note: For simplicity, the asynchronous request buttons can be entered by the application user via the console, by entering "5U" (request from 5th floor wanting to go Up) or "8D" (request from 8th floor wanting to go Down) or "2" (request from inside elevator wanting to stop at 2nd floor). When the user enters "Q" on the console, the application must end after visiting all floors entered before "Q".
+
+DK ideas- use the elevator events to track what the elevator will do,
+
+Elevator fields and methods
+DirectionUp
+CheckDirection aka if going up see events up has value if so keep going
+EventsUp
+EventsDown
+
+ElevatorEvents
+{
+  Timestamp (Date and time including seconds) - use for timing
+  DirectionOfElevator is Up or Down
+  DirectionOfEventUp bool used to determine if elevator will hit this floor when going up if true
+  FloorRequestedBool bool used when floor is Requested
+  FloorOn int is floor elevator has moved to
+  FloorPassedBool bool used when floor is passed
+  FloorStopped bool used when the floor is stoppedon
+  CompletedEvent bool event is done
+}
+
+-other items to keep in mind can add a floor async, add way to gather input
+
+example
+go to floor 2, 8, 5 note start on 1.
+
+idea is to go through elevator events, elevator events are key driver for how elevator will move
+-go up or go down
+
+idea the elevator will contain elevator events with floors above current floor, floors below current floor, completedEvents aka moved to completed events when the floor is reached
+
+so you determine if event is above or below current floor if same floor nothing happens, just log same floor requested and have a record
