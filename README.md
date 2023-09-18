@@ -53,3 +53,5 @@ so you determine if event is above or below current floor if same floor nothing 
 
 // now the elevator, be able to gather inputs of what floors to visit.
 -once floors are gathered, turn that into event objects for tdd
+
+-do the timer last for now just add floors to visit and sort the floors in order, keep going the needed direction
