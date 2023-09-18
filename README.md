@@ -23,10 +23,9 @@ Note: For simplicity, the asynchronous request buttons can be entered by the app
 DK ideas- use the elevator events to track what the elevator will do,
 
 Elevator fields and methods
-DirectionUp
+DirectionOfElevator
 CheckDirection aka if going up see events up has value if so keep going
-EventsUp
-EventsDown
+Events, note everytime a floor is visited you track if evelator is going up or down and resort events
 
 ElevatorEvents
 {
@@ -51,3 +50,6 @@ idea is to go through elevator events, elevator events are key driver for how el
 idea the elevator will contain elevator events with floors above current floor, floors below current floor, completedEvents aka moved to completed events when the floor is reached
 
 so you determine if event is above or below current floor if same floor nothing happens, just log same floor requested and have a record
+
+// now the elevator, be able to gather inputs of what floors to visit.
+-once floors are gathered, turn that into event objects for tdd
