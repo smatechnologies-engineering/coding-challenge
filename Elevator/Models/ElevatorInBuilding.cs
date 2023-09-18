@@ -1,22 +1,43 @@
 using System.Collections.Generic;
+using System;
+using System.Threading;
+
+public enum Direction
+{
+  Up, //0
+  Down, //1
+  Idle //2
+}
 
 namespace Elevator.Models
 {
   public class ElevatorInBuilding
   {
-    public int CurrentFloor { get; set; } = 1;
-    public List<ElevatorEvent> EventsOrderedByFloor = new List<ElevatorEvent> { };
+    private int currentFloor;
+    private Direction direction;
+    private List<int> floorRequests;
 
-    public List<ElevatorEvent> AddEvent(int floorToVisit)
+    public ElevatorInBuilding()
     {
-      ElevatorEvent newEvent = new ElevatorEvent(floorToVisit);
-
-      EventsOrderedByFloor.Add(newEvent);
-
-      //sort floors in order
-      EventsOrderedByFloor.Sort((x, y) => x.FloorRequested.CompareTo(y.FloorRequested));
-
-      return EventsOrderedByFloor;
+      currentFloor = 1;
+      direction = Direction.Idle;
+      floorRequests = new List<int>();
     }
+
+    public void RequestFloor(int floor)
+    {
+      if(floor == currentFloor)
+      {
+        return;
+      }
+      if(direction == Direction.Idle)
+      {
+        direction = (floor > currentFloor) ? Direction.Up : Direction.Down;
+      }
+
+      floorRequests.Add(floor);
+    }
+
+
   }
 }
