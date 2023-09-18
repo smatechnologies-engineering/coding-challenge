@@ -5,20 +5,25 @@ namespace Elevator.Models
   public class ElevatorEvent
   {
     public ElevatorEvent(
-      bool DirectionOfElevatorUp,
-      bool DirectionOfEventUp,
-      bool FloorRequestedBool,
-      bool FloorOn,
-      bool FloorPassedBool,
-      bool FloorStopped,
-      bool CompletedEvent
+      int FloorRequested
+      // bool DirectionOfElevatorUp,
+      // bool DirectionOfEventUp,
+      // bool FloorRequestedBool,
+      // bool FloorOn,
+      // bool FloorPassedBool,
+      // bool FloorStopped,
+      // bool CompletedEvent
       )
     {
       this.Now = (DateTimeOffset)DateTime.UtcNow;
-      this.DirectionOfElevatorUp = DirectionOfElevatorUp;
+      this.FloorRequested = FloorRequested;
+
+      // this.DirectionOfElevatorUp = DirectionOfElevatorUp;
     }
     //  Timestamp (Date and time including seconds) - use for timing  // using System;
     public DateTimeOffset Now { get; set; }
+
+    public int FloorRequested { get; set; }
 
     public bool DirectionOfElevatorUp { get; set; }
     // bool used to determine if elevator will hit this floor when going up if true
