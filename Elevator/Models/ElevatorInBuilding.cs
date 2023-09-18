@@ -4,11 +4,15 @@ namespace Elevator.Models
 {
   public class ElevatorInBuilding
   {
-    public List<int> FloorsToVisit = new List<int> { };
+    public List<ElevatorEvent> EventsOrderedByFloor = new List<ElevatorEvent> { };
 
-    public void AddFloor(int floor)
+    public List<ElevatorEvent> AddEvent(int floorToVisit)
     {
-      FloorsToVisit.Add(floor);
+      ElevatorEvent newEvent = new ElevatorEvent(floorToVisit);
+
+      EventsOrderedByFloor.Add(newEvent);
+
+      return EventsOrderedByFloor;
     }
   }
 }
