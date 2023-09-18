@@ -25,10 +25,23 @@ namespace Elevator.Tests
       ElevatorInBuilding newElevator = new ElevatorInBuilding();
       int floorToVisit = 2;
       List<ElevatorEvent> expectedAnswer = newElevator.AddEvent(floorToVisit);
-      Console.WriteLine("2929");
+      // Console.WriteLine(JsonConvert.SerializeObject(expectedAnswer));
+      CollectionAssert.AreEqual(expectedAnswer, newElevator.EventsOrderedByFloor);
+    }
+
+    [TestMethod]
+    // naming convention is MethodOrFieldName_Description_ReturnType
+    public void AddFloor_AddFloorToVisitMultipleTimesAndSort_ListOfEvents()
+    {
+      ElevatorInBuilding newElevator = new ElevatorInBuilding();
+      int floorToVisit1 = 2;
+      int floorToVisit2 = 8;
+      int floorToVisit3 = 5;
+      newElevator.AddEvent(floorToVisit1);
+      newElevator.AddEvent(floorToVisit2);
+      List<ElevatorEvent> expectedAnswer = newElevator.AddEvent(floorToVisit3);
+      // List<ElevatorEvent> sample = new List<ElevatorEvent> { new ElevatorEvent(1) };
       Console.WriteLine(JsonConvert.SerializeObject(expectedAnswer));
-      Console.WriteLine(JsonConvert.SerializeObject(newElevator.EventsOrderedByFloor));
-      Console.WriteLine("3232");
       CollectionAssert.AreEqual(expectedAnswer, newElevator.EventsOrderedByFloor);
     }
 
