@@ -28,5 +28,20 @@ namespace Elevator.Tests
       CollectionAssert.AreEqual(newElevator.FloorsToVisit, expectedAnswer);
     }
 
+    [TestMethod]
+    // naming convention is MethodOrFieldName_Description_ReturnType
+    public void AddFloor_AddFloorToVisitMultipleTimes_Void()
+    {
+      ElevatorInBuilding newElevator = new ElevatorInBuilding();
+      int floorToVisit = 2;
+      int floorToVisit2 = 8;
+      int floorToVisit3 = 5;
+      List<int> expectedAnswer = new List<int> { 2, 8, 5 };
+      newElevator.AddFloor(floorToVisit);
+      newElevator.AddFloor(floorToVisit2);
+      newElevator.AddFloor(floorToVisit3);
+      CollectionAssert.AreEqual(newElevator.FloorsToVisit, expectedAnswer);
+    }
+
   }
 }
