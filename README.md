@@ -55,3 +55,11 @@ so you determine if event is above or below current floor if same floor nothing 
 -once floors are gathered, turn that into event objects for tdd
 
 -do the timer last for now just add floors to visit and sort the floors in order, keep going the needed direction
+
+
+//notes on what I have
+I can collect floors to visit, this is made into event objects and events sorted ascending by floor are availible.
+
+
+// new idea focus on the direction the elevator goes and what happens between the floors
+Up, Down, Stopped(Idle)
