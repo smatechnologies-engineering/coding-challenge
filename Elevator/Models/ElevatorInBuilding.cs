@@ -40,7 +40,7 @@ namespace Elevator.Models
 
       Console.WriteLine(4141);
       floorRequests.Add(floor);
-      Run();
+      // Run();
     }
 
     // Run the elevator, note on request floor we set the direction 
