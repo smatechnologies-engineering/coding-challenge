@@ -41,33 +41,34 @@ namespace Elevator.Tests
       newElevator.RequestFloor(floorToVisit2);
       List<int> expectedAnswer = new List<int> { 3, 5 };
       Console.WriteLine(JsonConvert.SerializeObject(newElevator.floorRequests));
+      Assert.AreEqual(newElevator.direction, Direction.Up);
       CollectionAssert.AreEqual(expectedAnswer, newElevator.floorRequests);
     }
 
-    // CheckThatThereIsDelayToAddOneFloorAway idea do 3,4,2 check the current floor or next floor
+    [TestMethod]
+    public void RequestFloor_DirectionIsUp_Void()
+    {
+      ElevatorInBuilding newElevator = new ElevatorInBuilding();
+      int floorToVisit = 5;
+      int floorToVisit2 = 3;
+      newElevator.RequestFloor(floorToVisit);
+      newElevator.RequestFloor(floorToVisit2);
+      Assert.AreEqual(newElevator.direction, Direction.Up);
+    }
+
     // [TestMethod]
-    // public void Run_CheckThatThereIsDelayToAddOneFloorAway_Void()
+    // public void Run_ElevatorMovesToRequestedFloors()
     // {
+    //   // Arrange
     //   ElevatorInBuilding newElevator = new ElevatorInBuilding();
-    //   int floorToVisit = 3;
-    //   int floorToVisit2 = 4;
-    //   int floorToVisit3 = 2;
+    //   int floorToVisit = 5;
+    //   int floorToVisit2 = 3;
     //   newElevator.RequestFloor(floorToVisit);
-    //   //need to Run
-    //   newElevator.Run();
-    //   Thread.Sleep(2000);
     //   newElevator.RequestFloor(floorToVisit2);
-    //   Thread.Sleep(2000);
-    //   int nextFloorYouGoTo = newElevator.nextFloorToVisit;
-    //   Console.WriteLine(JsonConvert.SerializeObject(nextFloorYouGoTo));
-    //   Assert.AreEqual(nextFloorYouGoTo, floorToVisit);
-    //   newElevator.RequestFloor(floorToVisit3);
-    //   List<int> expectedAnswer = new List<int> { 3, 4, 1 };
-    //   Console.WriteLine(JsonConvert.SerializeObject(newElevator.floorRequests));
-    //   CollectionAssert.AreEqual(expectedAnswer, newElevator.floorRequests);
+    //   newElevator.Run();
+
+    //   CollectionAssert.AreEqual(newElevator.floorRequests, new List<int>());
     // }
-
-
 
   }
 }
