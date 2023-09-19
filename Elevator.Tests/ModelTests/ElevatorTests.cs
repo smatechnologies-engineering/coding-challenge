@@ -36,12 +36,11 @@ namespace Elevator.Tests
     {
       ElevatorInBuilding newElevator = new ElevatorInBuilding();
       int floorToVisit = 5;
-      int floorToVisit2 = 2;
+      int floorToVisit2 = 3;
       newElevator.RequestFloor(floorToVisit);
       Thread.Sleep(3000);
       newElevator.RequestFloor(floorToVisit2);
-      // newElevator.RequestFloor
-      List<int> expectedAnswer = new List<int> { 5, 2 };
+      List<int> expectedAnswer = new List<int> { 3, 5 };
       Console.WriteLine(JsonConvert.SerializeObject(newElevator.floorRequests));
       CollectionAssert.AreEqual(expectedAnswer, newElevator.floorRequests);
     }
