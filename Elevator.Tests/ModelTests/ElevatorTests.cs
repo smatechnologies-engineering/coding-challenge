@@ -3,6 +3,7 @@ using Elevator.Models;
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System.Threading;
 
 namespace Elevator.Tests
 {
@@ -26,6 +27,21 @@ namespace Elevator.Tests
       int floorToVisit = 2;
       newElevator.RequestFloor(floorToVisit);
       List<int> expectedAnswer = new List<int> { 2 };
+      Console.WriteLine(JsonConvert.SerializeObject(newElevator.floorRequests));
+      CollectionAssert.AreEqual(expectedAnswer, newElevator.floorRequests);
+    }
+
+    [TestMethod]
+    public void Run_RunAfterAddFloorToVisit_Void()
+    {
+      ElevatorInBuilding newElevator = new ElevatorInBuilding();
+      int floorToVisit = 5;
+      int floorToVisit2 = 2;
+      newElevator.RequestFloor(floorToVisit);
+      Thread.Sleep(3000);
+      newElevator.RequestFloor(floorToVisit2);
+      // newElevator.RequestFloor
+      List<int> expectedAnswer = new List<int> { 5, 2 };
       Console.WriteLine(JsonConvert.SerializeObject(newElevator.floorRequests));
       CollectionAssert.AreEqual(expectedAnswer, newElevator.floorRequests);
     }
