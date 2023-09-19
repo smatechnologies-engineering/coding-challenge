@@ -15,7 +15,7 @@ namespace Elevator.Models
   {
     private int currentFloor;
     private Direction direction;
-    private List<int> floorRequests;
+    public List<int> floorRequests;
 
     public ElevatorInBuilding()
     {
