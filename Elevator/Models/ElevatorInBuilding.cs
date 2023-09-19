@@ -4,18 +4,17 @@ using System.Threading;
 using System.Linq;
 using Newtonsoft.Json;
 
-public enum Direction
-{
-  Up, //0
-  Down, //1
-  Idle //2
-}
-
 namespace Elevator.Models
 {
+  public enum Direction
+  {
+    Up, //0
+    Down, //1
+    Idle //2
+  }
   public class ElevatorInBuilding
   {
-    private int currentFloor;
+    public int currentFloor;
     public Direction direction;
     public List<int> floorRequests;
     public int nextFloorToVisit;
