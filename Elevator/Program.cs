@@ -4,7 +4,7 @@ ElevatorInBuilding elevator = new ElevatorInBuilding();
 
 while (true)
 {
-  Console.WriteLine("Enter a floor request as a number or 'q' to quit, you can keep adding multiple floors just type them and press enter");
+  Console.WriteLine("Input a floor request as a number and press enter or 'q' to quit then press enter, you can keep adding multiple floors just type them and press enter");
   string input = Console.ReadLine().Trim();
   if (input.Equals("q"))
   {
@@ -13,14 +13,14 @@ while (true)
   // check use of out
   else if (int.TryParse(input, out int floor))
   {
-    Console.WriteLine("16");
+    Console.WriteLine("Parsing inputted value to integer");
     elevator.RequestFloor(floor);
     elevator.Run();
   }
 
   if (elevator.direction == Direction.Idle)
   {
-    Console.WriteLine("Elevator is not moving. Starting elevator...");
+    Console.WriteLine("Elevator is idle (not moving).");
     elevator.Run();
   }
 }
