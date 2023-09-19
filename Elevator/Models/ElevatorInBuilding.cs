@@ -42,7 +42,11 @@ namespace Elevator.Models
       Console.WriteLine(4141);
 
       floorRequests.Add(floor);
-      //need to sort the floors here
+      //need to sort the floors here however if one floor away hold on for 3 seconds before doing the sort since the elevator cannot stop there on time
+      if (Math.Abs(floor - currentFloor) == 1)
+      {
+        Thread.Sleep(3000);
+      }
       floorRequests.Sort();
       // Run();
     }
