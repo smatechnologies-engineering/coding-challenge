@@ -63,3 +63,8 @@ I can collect floors to visit, this is made into event objects and events sorted
 
 // new idea focus on the direction the elevator goes and what happens between the floors
 Up, Down, Stopped(Idle)
+
+//setup notes
+git branch -M main
+git remote add origin https://github.com/dan-kiss-dev-this/dan-kiss-dev-this-SmaElevatorDk.git
+git push -u origin main
