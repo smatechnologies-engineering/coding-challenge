@@ -20,7 +20,7 @@ namespace Elevator.Tests
     //get floor to visit
     [TestMethod]
     // naming convention is MethodOrFieldName_Description_ReturnType
-    public void AddFloor_AddFloorToVisit_ListOfEvents()
+    public void AddFloor_AddFloorToVisit_ListOfInt()
     {
       ElevatorInBuilding newElevator = new ElevatorInBuilding();
       int floorToVisit = 2;
