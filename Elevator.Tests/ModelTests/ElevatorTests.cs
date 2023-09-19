@@ -32,33 +32,39 @@ namespace Elevator.Tests
     }
 
     [TestMethod]
-    public void Run_RunAfterAddFloorToVisit_Void()
+    public void RequestFloor_AddMultipleFloorsInSortedManner_Void()
     {
       ElevatorInBuilding newElevator = new ElevatorInBuilding();
       int floorToVisit = 5;
       int floorToVisit2 = 3;
       newElevator.RequestFloor(floorToVisit);
-      Thread.Sleep(3000);
       newElevator.RequestFloor(floorToVisit2);
       List<int> expectedAnswer = new List<int> { 3, 5 };
       Console.WriteLine(JsonConvert.SerializeObject(newElevator.floorRequests));
       CollectionAssert.AreEqual(expectedAnswer, newElevator.floorRequests);
     }
 
+    // CheckThatThereIsDelayToAddOneFloorAway idea do 3,4,2 check the current floor or next floor
     // [TestMethod]
-    // // naming convention is MethodOrFieldName_Description_ReturnType
-    // public void AddFloor_AddFloorToVisitMultipleTimesAndSort_ListOfEvents()
+    // public void Run_CheckThatThereIsDelayToAddOneFloorAway_Void()
     // {
     //   ElevatorInBuilding newElevator = new ElevatorInBuilding();
-    //   int floorToVisit1 = 2;
-    //   int floorToVisit2 = 8;
-    //   int floorToVisit3 = 5;
-    //   newElevator.AddEvent(floorToVisit1);
-    //   newElevator.AddEvent(floorToVisit2);
-    //   List<ElevatorEvent> expectedAnswer = newElevator.AddEvent(floorToVisit3);
-    //   // List<ElevatorEvent> sample = new List<ElevatorEvent> { new ElevatorEvent(1) };
-    //   Console.WriteLine(JsonConvert.SerializeObject(expectedAnswer));
-    //   CollectionAssert.AreEqual(expectedAnswer, newElevator.EventsOrderedByFloor);
+    //   int floorToVisit = 3;
+    //   int floorToVisit2 = 4;
+    //   int floorToVisit3 = 2;
+    //   newElevator.RequestFloor(floorToVisit);
+    //   //need to Run
+    //   newElevator.Run();
+    //   Thread.Sleep(2000);
+    //   newElevator.RequestFloor(floorToVisit2);
+    //   Thread.Sleep(2000);
+    //   int nextFloorYouGoTo = newElevator.nextFloorToVisit;
+    //   Console.WriteLine(JsonConvert.SerializeObject(nextFloorYouGoTo));
+    //   Assert.AreEqual(nextFloorYouGoTo, floorToVisit);
+    //   newElevator.RequestFloor(floorToVisit3);
+    //   List<int> expectedAnswer = new List<int> { 3, 4, 1 };
+    //   Console.WriteLine(JsonConvert.SerializeObject(newElevator.floorRequests));
+    //   CollectionAssert.AreEqual(expectedAnswer, newElevator.floorRequests);
     // }
 
 
