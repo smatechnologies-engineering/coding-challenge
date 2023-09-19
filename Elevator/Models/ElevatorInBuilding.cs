@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System;
 using System.Threading;
 using System.Linq;
+using Newtonsoft.Json;
 
 public enum Direction
 {
@@ -39,7 +40,10 @@ namespace Elevator.Models
       }
 
       Console.WriteLine(4141);
+
       floorRequests.Add(floor);
+      //need to sort the floors here
+      floorRequests.Sort();
       // Run();
     }
 
