@@ -18,6 +18,7 @@ namespace Elevator.Models
     private int currentFloor;
     public Direction direction;
     public List<int> floorRequests;
+    public int nextFloorToVisit;
 
     public ElevatorInBuilding()
     {
@@ -28,18 +29,15 @@ namespace Elevator.Models
 
     public void RequestFloor(int floor)
     {
-      Console.WriteLine(3030);
       if (floor == currentFloor)
       {
         return;
       }
       if (direction == Direction.Idle)
       {
-        Console.WriteLine(3737);
         direction = (floor > currentFloor) ? Direction.Up : Direction.Down;
+        Console.WriteLine($"Direction was idle, now being set to {direction}");
       }
-
-      Console.WriteLine(4141);
 
       floorRequests.Add(floor);
       //need to sort the floors here however if one floor away hold on for 3 seconds before doing the sort since the elevator cannot stop there on time
@@ -48,7 +46,6 @@ namespace Elevator.Models
         Thread.Sleep(3000);
       }
       floorRequests.Sort();
-      // Run();
     }
 
     // Run the elevator, note on request floor we set the direction 
@@ -56,9 +53,12 @@ namespace Elevator.Models
     {
       while (floorRequests.Count > 0)
       {
-        int nextFloor = GetNextFloor();
-        Console.WriteLine(4848);
-        MoveToFloor(nextFloor);
+        Console.WriteLine("Calculating next floor");
+        int floor = GetNextFloor();
+        nextFloorToVisit = floor;
+        Console.WriteLine("Moving to next floor");
+        Console.WriteLine(nextFloorToVisit);
+        MoveToFloor(nextFloorToVisit);
       }
       direction = Direction.Idle;
     }
