@@ -16,14 +16,15 @@ namespace Elevator.Models
   {
     public int currentFloor;
     public Direction direction;
-    public List<int> floorRequests;
+    public List<int> floorRequests = new List<int>();
     public int nextFloorToVisit;
+    public List<ElevatorEvent> events = new List<ElevatorEvent>();
 
     public ElevatorInBuilding()
     {
       currentFloor = 1;
       direction = Direction.Idle;
-      floorRequests = new List<int>();
+      // floorRequests = new List<int>();
     }
 
     public void RequestFloor(int floor)
@@ -39,6 +40,8 @@ namespace Elevator.Models
       }
 
       floorRequests.Add(floor);
+      ElevatorEvent floorRequest = new ElevatorEvent(TypeOfEvent.FloorRequest);
+      events.Add(floorRequest);
       //need to sort the floors here however if one floor away hold on for 3 seconds before doing the sort since the elevator cannot stop there on time
       if (Math.Abs(floor - currentFloor) == 1)
       {
@@ -86,6 +89,7 @@ namespace Elevator.Models
           Thread.Sleep(3000);
           currentFloor++;
           Console.WriteLine($"Arrived at Floor {currentFloor}");
+          events.Add(new ElevatorEvent(TypeOfEvent.PassFloor));
         }
       }
       else if (currentFloor > targetFloor)
@@ -96,9 +100,11 @@ namespace Elevator.Models
           Thread.Sleep(3000);
           currentFloor--;
           Console.WriteLine($"Arrived at Floor {currentFloor}");
+          events.Add(new ElevatorEvent(TypeOfEvent.PassFloor));
         }
       }
       Console.WriteLine($"Elevator stopped at Floor {currentFloor}");
+      events.Add(new ElevatorEvent(TypeOfEvent.StopFloor));
       floorRequests.Remove(currentFloor);
       Thread.Sleep(1000);
     }
