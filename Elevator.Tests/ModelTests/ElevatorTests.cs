@@ -65,5 +65,17 @@ namespace Elevator.Tests
       Assert.AreEqual(newElevator.nextFloorToVisit, floorToVisit);
     }
 
+    public void Run_FloorRequestsAreRemovedAfterVisited_Void()
+    {
+      ElevatorInBuilding newElevator = new ElevatorInBuilding();
+      int floorToVisit = 5;
+      int floorToVisit2 = 3;
+      newElevator.RequestFloor(floorToVisit);
+      newElevator.RequestFloor(floorToVisit2);
+      newElevator.Run();
+      List<int> blankList = new List<int> { };
+      Assert.AreEqual(newElevator.floorRequests, blankList);
+    }
+
   }
 }
