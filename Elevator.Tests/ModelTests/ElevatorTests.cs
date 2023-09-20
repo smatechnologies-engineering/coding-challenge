@@ -56,19 +56,14 @@ namespace Elevator.Tests
       Assert.AreEqual(newElevator.direction, Direction.Up);
     }
 
-    // [TestMethod]
-    // public void Run_ElevatorMovesToRequestedFloors()
-    // {
-    //   // Arrange
-    //   ElevatorInBuilding newElevator = new ElevatorInBuilding();
-    //   int floorToVisit = 5;
-    //   int floorToVisit2 = 3;
-    //   newElevator.RequestFloor(floorToVisit);
-    //   newElevator.RequestFloor(floorToVisit2);
-    //   newElevator.Run();
-
-    //   CollectionAssert.AreEqual(newElevator.floorRequests, new List<int>());
-    // }
+    public void Run_NextFloorToVisitIsCalculated_Void()
+    {
+      ElevatorInBuilding newElevator = new ElevatorInBuilding();
+      int floorToVisit = 5;
+      newElevator.RequestFloor(floorToVisit);
+      newElevator.Run();
+      Assert.AreEqual(newElevator.nextFloorToVisit, floorToVisit);
+    }
 
   }
 }
