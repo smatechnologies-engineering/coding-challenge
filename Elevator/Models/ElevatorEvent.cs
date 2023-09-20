@@ -2,42 +2,19 @@ using System;
 
 namespace Elevator.Models
 {
+  // Timestamp and asynchronous floor request, every time one occurs.
+  // Timestamp and floor, every time elevator passes a floor.
+  // Timestamp and floor, every time elevator stops at a floor.
   public class ElevatorEvent
+
+  // 3 types are floor request, stop on floor, pass a floor-check if stopped if so 4 second wait otherwise 3 second wait, just add the needed seconds to the timestamp
   {
-    public ElevatorEvent(
-      int FloorRequested
-      // bool DirectionOfElevatorUp,
-      // bool DirectionOfEventUp,
-      // bool FloorRequestedBool,
-      // bool FloorOn,
-      // bool FloorPassedBool,
-      // bool FloorStopped,
-      // bool CompletedEvent
-      )
+    public DateTimeOffset Now { get; set; }
+    public ElevatorEvent(string type)
     {
       this.Now = (DateTimeOffset)DateTime.UtcNow;
       this.FloorRequested = FloorRequested;
-
-      // this.DirectionOfElevatorUp = DirectionOfElevatorUp;
     }
-    //  Timestamp (Date and time including seconds) - use for timing  // using System;
-    public DateTimeOffset Now { get; set; }
-
-    public int FloorRequested { get; set; }
-
-    public bool DirectionOfElevatorUp { get; set; }
-    // bool used to determine if elevator will hit this floor when going up if true
-
-    public bool DirectionOfEventUp { get; set; }
-    // bool used when floor is Requested
-    public bool FloorRequestedBool { get; set; }
-    // int is floor elevator has moved to
-    public int FloorOn { get; set; }
-    // FloorPassedBool bool used when floor is passed
-    public bool FloorPassedBool { get; set; }
-    //  bool used when the floor is stoppedon
-    public bool FloorStopped { get; set; }
-    //  bool event is done
-    public bool CompletedEvent { get; set; }
+    
   }
 }
