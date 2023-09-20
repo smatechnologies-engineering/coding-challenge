@@ -68,3 +68,13 @@ Up, Down, Stopped(Idle)
 git branch -M main
 git remote add origin https://github.com/dan-kiss-dev-this/dan-kiss-dev-this-SmaElevatorDk.git
 git push -u origin main
+
+log time  Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+
+Timestamp and asynchronous floor request, every time one occurs.
+Timestamp and floor, every time elevator passes a floor.
+Timestamp and floor, every time elevator stops at a floor.
+
+
+//need a way to keep being able to accept input on the console
+//need to log the events
