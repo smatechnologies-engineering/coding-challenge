@@ -1,3 +1,8 @@
+DK Notes, I had 2 approach ideas. First was to focus on the events on the elevator, this did not work as I had too may variables to track. I scrapped that approach and started fresh by focusing on the elevator and writing tests, I wrote the test before the code in some cases also to be doing test driven development. I built a way to store the floors the elevator has to visit and write testing for that. Then I added testing to confirm that the elevator could have floors requested not in order and that they could be sorted and have the elevator stop on the way up at floors above in order. Then I added testing to confirm the direction of the elevator was tracked, and the floors once visited are removed. I ended up adding in the events last using a test driven approach. I built a simple event object. Wrote tests that as the elevator was called to floor 3 from a starting point of floor 1 would have 4 events generate. Ran the test, confirmed it did not pass. Wrote the needed code, then ran the test again and confirmed it passed.
+
+What I would do with more time? I would take this console app and make this program run as a Web Api including making a controller with actions to collect different floors with a fun React based frontend.
+
+Prompt below and my notes are under that:
 Build an Elevator Coding Challenge!
 The Challenge
 Create an application that simulates the operation of a simple elevator.
@@ -19,6 +24,8 @@ Bonus Enhancement:
 
 Enhance the application as follows: If the elevator has reached its weight limit, it should stop only at floors that were selected from inside the elevator (to let passengers out), until it is no longer at the max weight limit.
 Note: For simplicity, the asynchronous request buttons can be entered by the application user via the console, by entering "5U" (request from 5th floor wanting to go Up) or "8D" (request from 8th floor wanting to go Down) or "2" (request from inside elevator wanting to stop at 2nd floor). When the user enters "Q" on the console, the application must end after visiting all floors entered before "Q".
+
+/////// Notes from the project, note these notes contain the old event based approach as well as the new elevator based approach.
 
 DK ideas- use the elevator events to track what the elevator will do,
 
