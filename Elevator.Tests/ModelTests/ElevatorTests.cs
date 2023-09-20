@@ -56,6 +56,7 @@ namespace Elevator.Tests
       Assert.AreEqual(newElevator.direction, Direction.Up);
     }
 
+    [TestMethod]
     public void Run_NextFloorToVisitIsCalculated_Void()
     {
       ElevatorInBuilding newElevator = new ElevatorInBuilding();
@@ -65,6 +66,7 @@ namespace Elevator.Tests
       Assert.AreEqual(newElevator.nextFloorToVisit, floorToVisit);
     }
 
+    [TestMethod]
     public void Run_FloorRequestsAreRemovedAfterVisited_Void()
     {
       ElevatorInBuilding newElevator = new ElevatorInBuilding();
@@ -73,9 +75,23 @@ namespace Elevator.Tests
       newElevator.RequestFloor(floorToVisit);
       newElevator.RequestFloor(floorToVisit2);
       newElevator.Run();
-      List<int> blankList = new List<int> { };
-      Assert.AreEqual(newElevator.floorRequests, blankList);
+      List<int> blankList = new List<int>() { };
+      CollectionAssert.AreEqual(newElevator.floorRequests, blankList);
     }
 
+    [TestMethod]
+    public void Run_AddEventsToElevator_Void()
+    {
+      ElevatorInBuilding newElevator = new ElevatorInBuilding();
+      int floorToVisit = 3;
+      newElevator.RequestFloor(floorToVisit);
+      newElevator.Run();
+      ElevatorEvent newEvent1 = new ElevatorEvent(TypeOfEvent.FloorRequest);
+      ElevatorEvent newEvent2 = new ElevatorEvent(TypeOfEvent.PassFloor); // 1
+      ElevatorEvent newEvent3 = new ElevatorEvent(TypeOfEvent.PassFloor); // 2
+      ElevatorEvent newEvent4 = new ElevatorEvent(TypeOfEvent.StopFloor);
+      List<ElevatorEvent> eventList = new List<ElevatorEvent> { newEvent1, newEvent2, newEvent3, newEvent4 };
+      Assert.AreEqual(newElevator.events.Count, eventList.Count);
+    }
   }
 }
